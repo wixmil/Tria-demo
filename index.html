@@ -25,31 +25,40 @@ button:disabled{cursor:default}
 .heading{display:flex;align-items:center;justify-content:space-between;gap:16px}
 .heading h1{font-size:25px;margin:0}.heading p{margin:8px 0 0;color:var(--muted)}
 .tag{font-size:12px;padding:9px 12px;background:#d6f1ed;color:#157e79;border-radius:50px;font-weight:700;white-space:nowrap}
-.columns{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:26px}
+.columns{display:grid;grid-template-columns:1fr 1.15fr;gap:18px;margin-top:26px}
 .panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 10px 30px #31577b12}
-.panel h2{font-size:16px;margin:0 0 16px}
-.field{font-size:13px;margin:10px 0;padding:10px 14px;background:var(--soft);border-radius:12px;display:flex;justify-content:space-between;gap:10px;align-items:center}
-.field span{color:var(--muted)}
-.field b.mono{font-family:ui-monospace,"SF Mono",Consolas,monospace;letter-spacing:.5px}
-.patient{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
-.metric{padding:16px;background:var(--soft);border:1px solid var(--line);border-radius:14px;transition:background .25s,border-color .25s}
-.metric small{display:block;color:#536d88;font-size:12px;margin-bottom:8px}
-.metric strong{display:block;font-size:20px}
-.metric .state{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-top:7px}
+.panel h2{font-size:16px;margin:0 0 16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pill-info{font-size:11px;font-weight:700;background:#eef5fc;color:#2c577d;padding:4px 10px;border-radius:999px}
+.field{font-size:13px;margin:8px 0;padding:9px 13px;background:var(--soft);border-radius:12px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.field span{color:var(--muted);flex-shrink:0}
+.field b{text-align:right}
+.field b.mono{font-family:ui-monospace,"SF Mono",Consolas,monospace;letter-spacing:.4px}
+.patient{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.metric{padding:13px;background:var(--soft);border:1px solid var(--line);border-radius:14px;transition:background .25s,border-color .25s}
+.metric small{display:block;color:#536d88;font-size:11px;margin-bottom:6px}
+.metric strong{display:block;font-size:17px}
+.metric .state{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-top:5px}
 .metric.ok{background:#e6f7ee;border-color:#a8e0c0}.metric.ok .state{color:#167344}
 .metric.warn{background:#fff6e0;border-color:#f0d38a}.metric.warn .state{color:#946000}
 .metric.bad{background:#fde8e8;border-color:#f0b0b0}.metric.bad .state{color:#a52c2c}
-.warning{background:#fff7eb;color:#8b590f;border:1px solid #f7dbac;padding:12px 14px;border-radius:12px;margin-top:15px;font-size:12px;line-height:1.5}
-.helper{font-size:13px;color:#6b8095;line-height:1.7}
+.warning{background:#fff7eb;color:#8b590f;border:1px solid #f7dbac;padding:12px 14px;border-radius:12px;margin-top:14px;font-size:12px;line-height:1.5}
+.helper{font-size:13px;color:#6b8095;line-height:1.6;margin:10px 0}
 .footer{font-size:12px;color:#7489a0;margin-top:24px}
-.testpanel{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center}
+.testpanel{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center}
 .testpanel .lbl{font-size:12px;color:var(--muted);margin-right:2px}
-.testpanel button{border:1px solid #c9dce9;background:#f3f8fc;border-radius:9px;padding:8px 12px;font-size:12px;font-weight:700;color:#2b5b7a}
+.testpanel button{border:1px solid #c9dce9;background:#f3f8fc;border-radius:9px;padding:7px 11px;font-size:12px;font-weight:700;color:#2b5b7a}
 .testpanel .t-ok{border-color:#a8e0c0;color:#1f874e}.testpanel .t-warn{border-color:#f0d38a;color:#a87500}.testpanel .t-bad{border-color:#f0b0b0;color:#c23c3c}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.step{padding:14px;background:#f3f8fc;border-radius:13px;font-size:12px;line-height:1.5}
-.step b{display:block;color:#137e90;margin-bottom:6px}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+
+/* Historia clínica abierta */
+.hc-doc{background:#f8fbfe;border:1px solid #dbe6f2;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.hc-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding-bottom:10px;border-bottom:1px solid #e2ecf6;font-size:12px;color:#4a6582}
+.hc-block{background:#fff;border:1px solid #e4edf6;border-radius:12px;padding:12px 14px}
+.hc-block h3{margin:0 0 6px;font-size:13px;color:#1a3554}
+.hc-block p{margin:0;font-size:12.5px;line-height:1.55;color:#3c5570}
+.hc-list{margin:6px 0 0;padding-left:18px;font-size:12.5px;line-height:1.55;color:#3c5570}
+.hc-list li{margin:3px 0}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 16px}
 .chips button{border:1px solid #b7dce0;border-radius:30px;background:#f1fbfa;color:#236779;font-size:12px;padding:7px 12px}
 .chips button:hover{background:#e0f5f3}
 .formbutton{background:#1f7d91;color:#fff;border:0;border-radius:10px;padding:11px 16px;font-weight:700}
@@ -64,7 +73,7 @@ button:disabled{cursor:default}
 
 /* Chat */
 .chat{position:fixed;right:24px;bottom:90px;width:min(420px,calc(100vw - 28px));height:min(660px,calc(100vh - 115px));display:flex;flex-direction:column;border-radius:22px;background:#fff;box-shadow:0 24px 70px #15365e5c;overflow:hidden;border:1px solid #c9dce9;z-index:4;transition:opacity .2s,transform .2s}
-.chat.hidden{display:none!important;opacity:0;pointer-events:none;transform:translateY(15px);visibility:hidden}
+.chat.hidden{display:none}
 .chathead{background:linear-gradient(110deg,#214a73,#127e90);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:15px 17px;cursor:move;touch-action:none;user-select:none}
 .chattitle{font-size:20px;font-weight:800}.chatmeta{font-size:11px;color:#d8f4f3;margin-top:4px}
 .headbtn{background:#ffffff1e;color:#fff;border:1px solid #ffffff50;border-radius:8px;width:31px;height:31px;font-size:18px;line-height:1}
@@ -105,7 +114,8 @@ button:disabled{cursor:default}
 .disclaimer{font-size:10px;color:#8697a9;text-align:center;padding:0 9px 8px;background:#fff}
 .dot{height:9px;width:9px;background:#54d6b5;border-radius:50%;display:inline-block;margin-right:6px}
 
-@media(max-width:850px){.columns{grid-template-columns:1fr}.topbar{padding:0 16px}.topright{display:none}.shell{padding:0 14px}.patient{grid-template-columns:repeat(2,1fr)}.chat{right:14px;bottom:82px}.steps{grid-template-columns:1fr}.launcher{right:14px;bottom:14px}}
+@media(max-width:920px){.columns{grid-template-columns:1fr}}
+@media(max-width:850px){.topbar{padding:0 16px}.topright{display:none}.shell{padding:0 14px}.patient{grid-template-columns:repeat(2,1fr)}.chat{right:14px;bottom:82px}.launcher{right:14px;bottom:14px}}
 @media(max-width:430px){.patient{grid-template-columns:1fr}.heading{align-items:flex-start;flex-direction:column}.panel{padding:17px}.brand small{display:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
@@ -124,10 +134,13 @@ button:disabled{cursor:default}
 
   <div class="columns">
     <section class="panel">
-      <h2>Ficha del paciente</h2>
+      <h2>Ficha del paciente <span class="pill-info">Llegada 19:12</span></h2>
+      <div class="field"><span>Nombre</span><b>Ramón XXXX XXXX</b></div>
       <div class="field"><span>Identificador</span><b>DEMO-0082</b></div>
-      <div class="field"><span>Edad</span><b>74 años</b></div>
-      <div class="field"><span>Motivo de consulta</span><b>Disnea y malestar</b></div>
+      <div class="field"><span>Edad / Sexo</span><b>74 años · Varón</b></div>
+      <div class="field"><span>Motivo de consulta</span><b>Disnea y malestar general</b></div>
+      <div class="field"><span>Alergias conocidas</span><b>Sin alergias medicamentosas conocidas</b></div>
+      <div class="field"><span>Medicación habitual</span><b>Enalapril 10 mg, Furosemida 40 mg, AAS 100 mg</b></div>
       <div class="field"><span>N.º historia clínica (HC3)</span><b class="mono">HC3-0048-27X6</b></div>
 
       <div class="patient" aria-live="polite">
@@ -136,7 +149,9 @@ button:disabled{cursor:default}
         <div class="metric" id="box-ta"><small>TA</small><strong id="m-ta">98/70 mmHg</strong><span class="state" id="s-ta">En el límite</span></div>
       </div>
 
-      <div class="warning">⚠ Valores ficticios para demostrar la interfaz. Los colores son orientativos y no deben utilizarse para valorar pacientes ni asignar prioridades clínicas.</div>
+      <div class="field" style="margin-top:10px"><span>Constantes complementarias (sim.)</span><b>FR 24 rpm · T.ª 36,8 °C · Gluc. 118 mg/dL</b></div>
+
+      <div class="warning">⚠ Valores y datos clínicos ficticios para demostrar la interfaz. Los colores son orientativos y no deben utilizarse para valorar pacientes ni asignar prioridades clínicas.</div>
       <div class="testpanel" role="group" aria-label="Pruebas de constantes">
         <span class="lbl">Probar constantes:</span>
         <button class="t-ok" type="button" data-preset="green">Verde</button>
@@ -146,14 +161,35 @@ button:disabled{cursor:default}
     </section>
 
     <section class="panel">
-      <h2>Proceso de trabajo</h2>
-      <div class="steps">
-        <div class="step"><b>01. Abrir TRIA+</b>Pulsa el asistente en la esquina inferior derecha.</div>
-        <div class="step"><b>02. Texto o voz</b>Escribe una consulta o usa el micrófono, si el navegador es compatible.</div>
-        <div class="step"><b>03. Revisar</b>La demo responde con guiones programados, sin IA clínica real.</div>
+      <h2>Historia clínica abierta (HC3 · Simulación) <span class="pill-info">Episodio #URG-2026-884</span></h2>
+      <div class="hc-doc">
+        <div class="hc-top">
+          <span><b>Paciente:</b> Ramón XXXX XXXX (74 años)</span>
+          <span><b>HC3:</b> <span class="mono">HC3-0048-27X6</span></span>
+          <span><b>Box asignado:</b> Triaje / Box 04 (ficticio)</span>
+        </div>
+
+        <div class="hc-block">
+          <h3>Antecedentes personales (ficticios)</h3>
+          <p>Hipertensión arterial de larga evolución, cardiopatía isquémica crónica estable, insuficiencia cardiaca con fracción de eyección ligeramente reducida y dislipemia. Exfumador desde hace 12 años.</p>
+        </div>
+
+        <div class="hc-block">
+          <h3>Enfermedad actual y evolución en urgencias</h3>
+          <p>Acude acompañado por disnea progresiva de 48 horas de evolución, ortopnea con dos almohadas y malestar general con sensación de fatiga al mínimo esfuerzo. Refiere discreto edema maleolar vespertino y molestias torácicas inespecíficas leves.</p>
+        </div>
+
+        <div class="hc-block">
+          <h3>Registro de enfermería y pruebas solicitadas (sim.)</h3>
+          <ul class="hc-list">
+            <li><b>19:14:</b> Recepción en triaje, toma de constantes iniciales y monitorización continua.</li>
+            <li><b>19:16:</b> Canalización de acceso venoso periférico pendiente de validación médica.</li>
+            <li><b>Solicitudes en curso (ficticias):</b> ECG de 12 derivaciones, analítica con función renal/iones/BNP y radiografía de tórax portátil.</li>
+          </ul>
+        </div>
       </div>
-      <h2 style="margin-top:28px">Funciones de demostración</h2>
-      <p class="helper">Prueba una de estas consultas o escribe la tuya:</p>
+
+      <p class="helper">Consultas rápidas de demostración:</p>
       <div class="chips">
         <button type="button" data-ask="Resume el caso">Resume el caso</button>
         <button type="button" data-ask="Explícame el triaje">Explícame el triaje</button>
@@ -205,6 +241,7 @@ let unread = 0, busy = false;
 /* ---------- Abrir / minimizar (arranca minimizado) ---------- */
 function openChat(){
   chat.classList.remove('hidden');
+  chat.style.display='flex';
   chat.setAttribute('aria-hidden','false');
   $('launcher').style.display='none';
   $('launcher').setAttribute('aria-expanded','true');
@@ -214,6 +251,7 @@ function openChat(){
 }
 function minimizeChat(restoreFocus = true){
   chat.classList.add('hidden');
+  chat.style.display='none';
   chat.setAttribute('aria-hidden','true');
   $('launcher').style.display='flex';
   $('launcher').setAttribute('aria-expanded','false');
@@ -323,7 +361,7 @@ function send(message){
       addBubble(r.text,'bot');
     }
     busy=false;
-  },1300); // Tiempo de escritura duplicado (antes 650ms)
+  },1300);
 }
 
 /* ---------- Eventos de envío (Enter y botón enviar) ---------- */
@@ -423,7 +461,7 @@ document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click'
 minimizeChat(false);
 welcome();
 const params=new URLSearchParams(location.search);
-if(params.get('kiosk')==='1'){ openChat(); document.querySelector('.topbar').style.display='none'; }
+if(params.get('kiosk')==='1'){ document.querySelector('.topbar').style.display='none'; minimizeChat(false); }
 if(params.get('auto')==='resumen'){ setTimeout(()=>{openChat();send('Resume el caso');},700); }
 if(params.get('readonly')==='1'){
   q.disabled=true; $('mic').style.display='none'; $('sendbtn').style.display='none';
