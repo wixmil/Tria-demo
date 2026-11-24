@@ -156,7 +156,6 @@ button:disabled{cursor:default}
       <p class="helper">Prueba una de estas consultas o escribe la tuya:</p>
       <div class="chips">
         <button type="button" data-ask="Resume el caso">Resume el caso</button>
-        <button type="button" data-ask="¿Se le puede dar ibuprofeno?">¿Ibuprofeno?</button>
         <button type="button" data-ask="Explícame el triaje">Explícame el triaje</button>
         <button type="button" data-ask="¿Qué ocurre con las solicitudes?">Solicitudes</button>
         <button type="button" data-ask="¿Qué puede hacer TRIA+?">¿Qué hace TRIA+?</button>
@@ -183,15 +182,14 @@ button:disabled{cursor:default}
   <div class="msgs" id="msgs" aria-live="polite"></div>
   <div class="quick" id="quick">
     <button type="button" data-q="Resume el caso">📋 Resumir caso</button>
-    <button type="button" data-q="¿Se le puede dar ibuprofeno?">💊 Ibuprofeno</button>
     <button type="button" data-q="¿Cómo gestionas las solicitudes?">📝 Solicitudes</button>
     <button type="button" data-q="¿Cómo funciona la voz?">🎙 Voz</button>
   </div>
   <form class="chatbottom" id="form">
     <div class="entry">
-      <input id="q" placeholder="Escribe una consulta clínica de ejemplo..." aria-label="Mensaje" autocomplete="off" maxlength="500">
+      <input id="q" type="text" placeholder="Escribe una consulta clínica de ejemplo..." aria-label="Mensaje" autocomplete="off" maxlength="500">
       <button type="button" class="round" id="mic" title="Dictar mensaje" aria-label="Dictar mensaje">🎤</button>
-      <button type="submit" class="round send" title="Enviar" aria-label="Enviar mensaje">➤</button>
+      <button type="submit" class="round send" id="sendbtn" title="Enviar" aria-label="Enviar mensaje">➤</button>
     </div>
     <div class="status" id="status">Puedes escribir o pulsar 🎤 para dictar una pregunta.</div>
   </form>
@@ -264,28 +262,7 @@ $('reset').addEventListener('click',()=>{
   $('status').textContent='Demo reiniciada.';
 });
 
-/* ---------- Lógica de respuestas ---------- */
-const normalize = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-
-const medRe = /ibuprofeno|nolotil|metamizol|paracetamol|enantyum|dexketoprofeno|aspirina|antiinflamatorio|aine|analgesic|medicacion|medicamento|farmaco|pauta|dosis|administr\w* (algo|un)|dar(le)? algo/;
-
-const intents = [
-  {re:/resum|caso|paciente|historia|hc3|antecedent/, text:
-'📋 RESUMEN DEL CASO SIMULADO\nPaciente DEMO-0082, 74 años. Motivo de consulta: disnea y malestar.\n\nConstantes ficticias: SpO₂ 97 %, FC 124 lpm (alta) y TA 98/70 mmHg (en el límite).\n\nTRIA+ propondría recopilar los datos clínicos pertinentes y mostrar alertas para revisión profesional. No asigna una prioridad real en esta demo.'},
-  {re:/solicitud|peticion|administrativ|registro|document|informe/, text:
-'📝 APOYO ADMINISTRATIVO (PROPUESTA)\nTRIA+ podría preparar borradores de registros y solicitudes a partir de datos ya introducidos, evitando duplicidades.\n\nAntes de guardar, emitir o cursar cualquier solicitud, el profesional autorizado debe revisarla y validarla.'},
-  {re:/voz|microfono|hablar|dictar|audio/, text:
-'🎙 TEXTO Y VOZ\nPulsa el micrófono del chat y dicta tu consulta. Si el navegador permite reconocimiento de voz, el texto aparecerá en el campo de entrada para que lo revises antes de enviar.\n\nEsta versión no transmite ni almacena grabaciones. Para uso hospitalario real harían falta garantías de privacidad y una tecnología validada.'},
-  {re:/triaje|prioridad|nivel|clasific|signo|alarma|riesgo|monitor|diagnostic|actuacion/, text:
-'🩺 APOYO A LA VALORACIÓN (CONCEPTO)\nEn el proyecto real, un sistema clínicamente validado podría señalar información relevante, signos de alarma y posibles necesidades de reevaluación o monitorización.\n\nTRIA+ no emite diagnósticos ni prescribe intervenciones en esta demo. La prioridad y las decisiones corresponden al personal sanitario siguiendo los protocolos.'},
-  {re:/funcion|que haces|que hace|que puede|para que sirve|tria|objetiv|ayud|benefici|dato/, text:
-'✨ FUNCIONES PROPUESTAS DE TRIA+\n• Panel flotante dentro del programa hospitalario.\n• Consulta por texto y voz.\n• Resumen de información clínica autorizada.\n• Alertas y orientaciones de apoyo, tras validación.\n• Borradores administrativos y recordatorios.\n\nTodo diseñado para liberar tiempo de tareas repetitivas, sin sustituir el criterio clínico.'},
-  {re:/^(hola|buenas|gracias|adios)/, text:
-'¡Hola! Puedes pedirme un resumen del caso simulado, explicaciones del triaje, información sobre la voz o cómo se prepararían los registros.'}
-];
-const fallback='💬 CONSULTA RECIBIDA\nEsta versión es una demo con respuestas programadas, no un modelo de IA general.\n\nNo tengo respuesta específica para esa pregunta. Prueba «Resume el caso», «¿Se le puede dar ibuprofeno?», «¿Qué puede hacer TRIA+?» o «¿Cómo funciona la voz?». En una versión futura se podría conectar un modelo de lenguaje con controles clínicos y de privacidad.';
-
-/* ---------- Respuesta especial: medicación ---------- */
+/* ---------- Respuesta especial: medicación (siempre devuelve esta respuesta) ---------- */
 function medicationReply(){
   const row=document.createElement('div');
   row.className='row bot';
@@ -322,11 +299,10 @@ function medicationReply(){
   return row;
 }
 
-function reply(message){
-  const n=normalize(message);
-  if(medRe.test(n)) return {node:medicationReply()};
-  const hit=intents.find(x=>x.re.test(n));
-  return {text: hit ? hit.text : fallback};
+/* ---------- Lógica de respuestas ---------- */
+function reply(){
+  // Ponga lo que ponga el usuario, devuelve siempre la respuesta predeterminada de ibuprofeno
+  return {node: medicationReply()};
 }
 
 function send(message){
@@ -338,16 +314,34 @@ function send(message){
   const dots=typingRow();
   setTimeout(()=>{
     dots.remove();
-    const r=reply(value);
+    const r=reply();
     if(r.node){
       msgs.appendChild(r.node);
       scrollDown();
       if(chat.classList.contains('hidden')){unread++;$('badge').textContent=unread;$('badge').classList.add('on');}
-    } else addBubble(r.text,'bot');
+    } else {
+      addBubble(r.text,'bot');
+    }
     busy=false;
   },650);
 }
-$('form').addEventListener('submit',e=>{e.preventDefault();send(q.value);});
+
+/* ---------- Eventos de envío (Enter y botón enviar) ---------- */
+$('form').addEventListener('submit', e => {
+  e.preventDefault();
+  send(q.value);
+});
+$('sendbtn').addEventListener('click', e => {
+  e.preventDefault();
+  send(q.value);
+});
+q.addEventListener('keydown', e => {
+  if(e.key === 'Enter'){
+    e.preventDefault();
+    send(q.value);
+  }
+});
+
 document.querySelectorAll('[data-q]').forEach(el=>el.addEventListener('click',()=>send(el.dataset.q)));
 document.querySelectorAll('[data-ask]').forEach(el=>el.addEventListener('click',()=>{
   openChat(); send(el.dataset.ask);
@@ -431,7 +425,7 @@ const params=new URLSearchParams(location.search);
 if(params.get('kiosk')==='1'){ openChat(); document.querySelector('.topbar').style.display='none'; }
 if(params.get('auto')==='resumen'){ setTimeout(()=>{openChat();send('Resume el caso');},700); }
 if(params.get('readonly')==='1'){
-  q.disabled=true; $('mic').style.display='none'; document.querySelector('.send').style.display='none';
+  q.disabled=true; $('mic').style.display='none'; $('sendbtn').style.display='none';
   $('status').textContent='Modo demostración: solo lectura.';
 }
 </script>
