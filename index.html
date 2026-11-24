@@ -5,27 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TRIA+ Assist | Demo interactiva</title>
 <style>
-:root{font-family:Inter,"Segoe UI",Arial,sans-serif;color:#1a3554;background:#e9f0f8}
+:root{
+  font-family:Inter,"Segoe UI",system-ui,Arial,sans-serif;
+  --navy:#1a3554;--navy2:#254a75;--teal:#127e90;--teal2:#4ec7c5;
+  --muted:#67809d;--line:#dce6f1;--bg:#e9f0f8;--soft:#f3f7fb;
+  color:var(--navy);background:var(--bg)
+}
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;background:linear-gradient(140deg,#dce8f6,#f4f8fc)}
 button,input{font:inherit}button{cursor:pointer}
 button:focus-visible,input:focus-visible{outline:3px solid #4bb7bd;outline-offset:2px}
-.topbar{height:70px;background:#254a75;color:white;display:flex;align-items:center;padding:0 36px;justify-content:space-between;box-shadow:0 3px 18px #1d406327}
-.brand{font-size:26px;font-weight:800;letter-spacing:-1px}.brand span{color:#4ec7c5}
+button:disabled{cursor:default}
+
+.topbar{height:70px;background:var(--navy2);color:#fff;display:flex;align-items:center;padding:0 36px;justify-content:space-between;box-shadow:0 3px 18px #1d406327}
+.brand{font-size:26px;font-weight:800;letter-spacing:-1px}.brand span{color:var(--teal2)}
+.brand small{font-size:12px;font-weight:400;margin-left:13px;letter-spacing:0;opacity:.85}
 .topright{font-size:13px;color:#dbeaf6}
 .shell{max-width:1350px;margin:28px auto;padding:0 22px}
 .heading{display:flex;align-items:center;justify-content:space-between;gap:16px}
-.heading h1{font-size:25px;margin:0}.heading p{margin:8px 0 0;color:#677e99}
-.tag{font-size:12px;padding:9px 12px;background:#d6f1ed;color:#157e79;border-radius:50px;font-weight:700}
+.heading h1{font-size:25px;margin:0}.heading p{margin:8px 0 0;color:var(--muted)}
+.tag{font-size:12px;padding:9px 12px;background:#d6f1ed;color:#157e79;border-radius:50px;font-weight:700;white-space:nowrap}
 .columns{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:26px}
-.panel{background:white;border:1px solid #dce6f1;border-radius:20px;padding:22px;box-shadow:0 10px 30px #31577b12}
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 10px 30px #31577b12}
 .panel h2{font-size:16px;margin:0 0 16px}
-.field{font-size:13px;margin:13px 0;padding:10px 14px;background:#f3f7fb;border-radius:12px;display:flex;justify-content:space-between;gap:10px}
-.field span{color:#67809d}
-.patient{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.metric{padding:16px;background:#f3f7fb;border:1px solid #dce6f1;border-radius:14px;transition:background .2s,border-color .2s}
+.field{font-size:13px;margin:10px 0;padding:10px 14px;background:var(--soft);border-radius:12px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.field span{color:var(--muted)}
+.field b.mono{font-family:ui-monospace,"SF Mono",Consolas,monospace;letter-spacing:.5px}
+.patient{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.metric{padding:16px;background:var(--soft);border:1px solid var(--line);border-radius:14px;transition:background .25s,border-color .25s}
 .metric small{display:block;color:#536d88;font-size:12px;margin-bottom:8px}
-.metric strong{display:block;font-size:20px;color:#1a3554}
+.metric strong{display:block;font-size:20px}
 .metric .state{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-top:7px}
 .metric.ok{background:#e6f7ee;border-color:#a8e0c0}.metric.ok .state{color:#167344}
 .metric.warn{background:#fff6e0;border-color:#f0d38a}.metric.warn .state{color:#946000}
@@ -33,45 +42,77 @@ button:focus-visible,input:focus-visible{outline:3px solid #4bb7bd;outline-offse
 .warning{background:#fff7eb;color:#8b590f;border:1px solid #f7dbac;padding:12px 14px;border-radius:12px;margin-top:15px;font-size:12px;line-height:1.5}
 .helper{font-size:13px;color:#6b8095;line-height:1.7}
 .footer{font-size:12px;color:#7489a0;margin-top:24px}
-.testpanel{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.testpanel{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center}
+.testpanel .lbl{font-size:12px;color:var(--muted);margin-right:2px}
 .testpanel button{border:1px solid #c9dce9;background:#f3f8fc;border-radius:9px;padding:8px 12px;font-size:12px;font-weight:700;color:#2b5b7a}
 .testpanel .t-ok{border-color:#a8e0c0;color:#1f874e}.testpanel .t-warn{border-color:#f0d38a;color:#a87500}.testpanel .t-bad{border-color:#f0b0b0;color:#c23c3c}
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .step{padding:14px;background:#f3f8fc;border-radius:13px;font-size:12px;line-height:1.5}
 .step b{display:block;color:#137e90;margin-bottom:6px}
-.formbutton{background:#1f7d91;color:white;border:0;border-radius:10px;padding:10px 14px;font-weight:700}
-.launcher{position:fixed;right:26px;bottom:26px;background:#107e92;color:white;border:0;border-radius:100px;box-shadow:0 12px 28px #147c9480;padding:14px 20px;font-weight:800;display:flex;align-items:center;gap:10px;z-index:5}
-.launcher:hover{background:#0b687d}.orb{background:#ffffff30;border-radius:50%;width:28px;height:28px;display:grid;place-items:center;font-size:17px}
-.chat{position:fixed;right:24px;bottom:90px;width:min(420px,calc(100vw - 28px));height:min(660px,calc(100vh - 115px));display:flex;flex-direction:column;border-radius:22px;background:#fff;box-shadow:0 24px 70px #15365e5c;overflow:hidden;border:1px solid #c9dce9;z-index:4;transition:opacity .2s,transform .2s,height .2s}
-.chat.hidden{opacity:0;pointer-events:none;transform:translateY(15px)}
-.chat.collapsed{height:58px}.chat.collapsed .notice,.chat.collapsed .msgs,.chat.collapsed .quick,.chat.collapsed .chatbottom,.chat.collapsed .disclaimer{display:none}
-.chat.collapsed .chathead{padding:10px 15px}.chat.collapsed .chatmeta{display:none}.chat.collapsed .chattitle{font-size:17px}
-.chathead{background:linear-gradient(110deg,#214a73,#127e90);color:white;display:flex;align-items:center;justify-content:space-between;padding:15px 17px;cursor:move;touch-action:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.chips button{border:1px solid #b7dce0;border-radius:30px;background:#f1fbfa;color:#236779;font-size:12px;padding:7px 12px}
+.chips button:hover{background:#e0f5f3}
+.formbutton{background:#1f7d91;color:#fff;border:0;border-radius:10px;padding:11px 16px;font-weight:700}
+.formbutton:hover{background:#176a7c}
+
+/* Launcher */
+.launcher{position:fixed;right:26px;bottom:26px;background:#107e92;color:#fff;border:0;border-radius:100px;box-shadow:0 12px 28px #147c9480;padding:14px 20px;font-weight:800;display:flex;align-items:center;gap:10px;z-index:5;transition:transform .15s,background .15s}
+.launcher:hover{background:#0b687d;transform:translateY(-2px)}
+.orb{background:#ffffff30;border-radius:50%;width:28px;height:28px;display:grid;place-items:center;font-size:17px}
+.badge{background:#e45f67;color:#fff;border-radius:50%;width:19px;height:19px;font-size:11px;display:none;place-items:center}
+.badge.on{display:grid}
+
+/* Chat */
+.chat{position:fixed;right:24px;bottom:90px;width:min(420px,calc(100vw - 28px));height:min(660px,calc(100vh - 115px));display:flex;flex-direction:column;border-radius:22px;background:#fff;box-shadow:0 24px 70px #15365e5c;overflow:hidden;border:1px solid #c9dce9;z-index:4;transition:opacity .2s,transform .2s}
+.chat.hidden{opacity:0;pointer-events:none;transform:translateY(15px);visibility:hidden}
+.chathead{background:linear-gradient(110deg,#214a73,#127e90);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:15px 17px;cursor:move;touch-action:none;user-select:none}
 .chattitle{font-size:20px;font-weight:800}.chatmeta{font-size:11px;color:#d8f4f3;margin-top:4px}
-.headbtn{background:#ffffff1e;color:white;border:1px solid #ffffff50;border-radius:8px;width:31px;height:31px;font-size:20px}
+.headbtn{background:#ffffff1e;color:#fff;border:1px solid #ffffff50;border-radius:8px;width:31px;height:31px;font-size:18px;line-height:1}
+.headbtn:hover{background:#ffffff38}
 .notice{background:#eaf8f7;border-bottom:1px solid #d5eceb;color:#236979;padding:9px 14px;font-size:11px}
-.msgs{flex:1;overflow-y:auto;background:#f7fafd;padding:18px 14px;display:flex;flex-direction:column;gap:13px}
-.bubble{max-width:91%;padding:12px 14px;border-radius:15px;line-height:1.47;font-size:13px;white-space:pre-line}
-.bot{align-self:flex-start;background:#fff;border:1px solid #dfe9f2;border-top-left-radius:4px;box-shadow:0 2px 5px #15365d0c}
-.me{align-self:flex-end;background:#d9f1ee;border-top-right-radius:4px}
-.quick{display:flex;flex-wrap:wrap;gap:7px;padding:10px 13px 0;background:white}
+.msgs{flex:1;overflow-y:auto;background:#f7fafd;padding:18px 14px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
+.row{display:flex;flex-direction:column;max-width:92%;animation:in .25s ease-out}
+.row.bot{align-self:flex-start}.row.me{align-self:flex-end;align-items:flex-end}
+.bubble{padding:12px 14px;border-radius:15px;line-height:1.5;font-size:13px;white-space:pre-line}
+.bot .bubble{background:#fff;border:1px solid #dfe9f2;border-top-left-radius:4px;box-shadow:0 2px 5px #15365d0c}
+.me .bubble{background:#d9f1ee;border-top-right-radius:4px}
+.time{font-size:10px;color:#93a4b5;margin:3px 6px 0}
+.bubble h4{margin:0 0 6px;font-size:13px}
+.bubble ul{margin:6px 0 0;padding-left:18px}.bubble li{margin:3px 0}
+.alertcard{border-left:4px solid #e0a43a;background:#fffaf0}
+.actions{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.actions button{border:1px solid #127e90;background:#fff;color:#127e90;border-radius:11px;padding:10px 12px;font-size:12px;font-weight:700;text-align:left;transition:background .15s}
+.actions button.primary{background:#127e90;color:#fff}
+.actions button:hover:not(:disabled){background:#e3f5f6}
+.actions button.primary:hover:not(:disabled){background:#0c6677}
+.actions button:disabled{background:#e9f6ee;border-color:#a8e0c0;color:#1f874e}
+.typing{display:inline-flex;gap:4px;padding:14px}
+.typing i{width:7px;height:7px;background:#8fb2c4;border-radius:50%;animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,80%,100%{opacity:.3;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.quick{display:flex;flex-wrap:wrap;gap:7px;padding:10px 13px 0;background:#fff}
 .quick button{border:1px solid #b7dce0;border-radius:30px;background:#f1fbfa;color:#236779;font-size:11px;padding:8px 11px}
-.chatbottom{padding:12px;background:white;border-top:1px solid #e4ecf2}
+.quick button:hover{background:#e0f5f3}
+.chatbottom{padding:12px;background:#fff;border-top:1px solid #e4ecf2}
 .entry{display:flex;align-items:center;gap:7px;background:#f1f6fa;border:1px solid #dde6ed;border-radius:14px;padding:7px}
 .entry input{width:100%;min-width:0;border:0;outline:0;background:transparent;font-size:13px;padding:8px}
 .round{border:0;border-radius:11px;background:#d6e7ee;color:#1e6680;min-width:36px;height:36px;font-weight:bold;font-size:17px}
-.round.send{background:#187f92;color:white}.round.active{background:#e45f67;color:white;animation:pulse 1.2s infinite}
+.round.send{background:#187f92;color:#fff}
+.round.active{background:#e45f67;color:#fff;animation:pulse 1.2s infinite}
 @keyframes pulse{50%{box-shadow:0 0 0 7px #e45f6728}}
 .status{min-height:17px;margin-top:6px;color:#6e8191;font-size:10px}
-.disclaimer{font-size:10px;color:#8697a9;text-align:center;padding:0 9px 7px;background:white}
+.disclaimer{font-size:10px;color:#8697a9;text-align:center;padding:0 9px 8px;background:#fff}
 .dot{height:9px;width:9px;background:#54d6b5;border-radius:50%;display:inline-block;margin-right:6px}
+
 @media(max-width:850px){.columns{grid-template-columns:1fr}.topbar{padding:0 16px}.topright{display:none}.shell{padding:0 14px}.patient{grid-template-columns:repeat(2,1fr)}.chat{right:14px;bottom:82px}.steps{grid-template-columns:1fr}.launcher{right:14px;bottom:14px}}
-@media(max-width:430px){.patient{grid-template-columns:1fr}.heading{align-items:flex-start;flex-direction:column}.panel{padding:17px}}
+@media(max-width:430px){.patient{grid-template-columns:1fr}.heading{align-items:flex-start;flex-direction:column}.panel{padding:17px}.brand small{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
 <header class="topbar">
-  <div class="brand">✚ TRIA<span>+</span> <small style="font-size:12px;font-weight:400;margin-left:13px;letter-spacing:0">Entorno hospitalario · SIMULACIÓN</small></div>
+  <div class="brand">✚ TRIA<span>+</span> <small>Entorno hospitalario · SIMULACIÓN</small></div>
   <div class="topright">● Urgencias / Triaje &nbsp; | &nbsp; Usuario: Enfermería demo</div>
 </header>
 
@@ -87,7 +128,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #4bb7bd;outline-offse
       <div class="field"><span>Identificador</span><b>DEMO-0082</b></div>
       <div class="field"><span>Edad</span><b>74 años</b></div>
       <div class="field"><span>Motivo de consulta</span><b>Disnea y malestar</b></div>
-      <div class="field"><span>N.º historia clínica (HC3)</span><b>HC3-0048-2716</b></div>
+      <div class="field"><span>N.º historia clínica (HC3)</span><b class="mono">HC3-0048-27X6</b></div>
 
       <div class="patient" aria-live="polite">
         <div class="metric" id="box-spo2"><small>SpO₂</small><strong id="m-spo2">97 %</strong><span class="state" id="s-spo2">En rango</span></div>
@@ -96,7 +137,8 @@ button:focus-visible,input:focus-visible{outline:3px solid #4bb7bd;outline-offse
       </div>
 
       <div class="warning">⚠ Valores ficticios para demostrar la interfaz. Los colores son orientativos y no deben utilizarse para valorar pacientes ni asignar prioridades clínicas.</div>
-      <div class="testpanel" aria-label="Pruebas de constantes">
+      <div class="testpanel" role="group" aria-label="Pruebas de constantes">
+        <span class="lbl">Probar constantes:</span>
         <button class="t-ok" type="button" data-preset="green">Verde</button>
         <button class="t-warn" type="button" data-preset="yellow">Amarillo</button>
         <button class="t-bad" type="button" data-preset="red">Rojo</button>
@@ -111,31 +153,37 @@ button:focus-visible,input:focus-visible{outline:3px solid #4bb7bd;outline-offse
         <div class="step"><b>03. Revisar</b>La demo responde con guiones programados, sin IA clínica real.</div>
       </div>
       <h2 style="margin-top:28px">Funciones de demostración</h2>
-      <p class="helper">Prueba con «Resume el caso», «¿Qué hace TRIA+?», «¿Qué datos analiza?», «¿Qué ocurre con las solicitudes?», «Explícame el triaje», o escribe cualquier otra pregunta para ver la respuesta alternativa.</p>
+      <p class="helper">Prueba una de estas consultas o escribe la tuya:</p>
+      <div class="chips">
+        <button type="button" data-ask="Resume el caso">Resume el caso</button>
+        <button type="button" data-ask="¿Se le puede dar ibuprofeno?">¿Ibuprofeno?</button>
+        <button type="button" data-ask="Explícame el triaje">Explícame el triaje</button>
+        <button type="button" data-ask="¿Qué ocurre con las solicitudes?">Solicitudes</button>
+        <button type="button" data-ask="¿Qué puede hacer TRIA+?">¿Qué hace TRIA+?</button>
+      </div>
       <button class="formbutton" id="openbtn" type="button">Abrir asistente TRIA+ ↗</button>
     </section>
   </div>
   <p class="footer">TRIA+ · MVP educativo · No accede a HC3 · No emite diagnósticos ni prioridades clínicas reales</p>
 </main>
 
-<button class="launcher" id="launcher" type="button"><span class="orb">✦</span> TRIA+ Assist <span id="arrow">▴</span></button>
+<button class="launcher" id="launcher" type="button" aria-controls="chat" aria-expanded="false">
+  <span class="orb">✦</span> TRIA+ Assist <span class="badge" id="badge">1</span>
+</button>
 
-<section class="chat hidden" id="chat" aria-label="Asistente flotante TRIA+" aria-hidden="true">
+<section class="chat hidden" id="chat" role="dialog" aria-label="Asistente flotante TRIA+" aria-hidden="true">
   <div class="chathead" id="draghead">
     <div><div class="chattitle">✚ TRIA+ Assist</div><div class="chatmeta"><span class="dot"></span> Chat clínico · Texto y voz (demo)</div></div>
     <div style="display:flex;gap:6px">
       <button class="headbtn" title="Reiniciar conversación" aria-label="Reiniciar conversación" id="reset" type="button">↻</button>
       <button class="headbtn" title="Minimizar" aria-label="Minimizar" id="minimize" type="button">−</button>
-      <button class="headbtn" title="Cerrar" aria-label="Cerrar" id="close" type="button">×</button>
     </div>
   </div>
   <div class="notice">🔒 Prototipo con respuestas predefinidas · Sin conexión a datos reales</div>
-  <div class="msgs" id="msgs" aria-live="polite">
-    <div class="bubble bot">¡Hola! Soy TRIA+ Assist.\nPuedo mostrarte cómo apoyaríamos a enfermería en el triaje y la gestión de registros.\n\n¿Qué te gustaría consultar?</div>
-  </div>
+  <div class="msgs" id="msgs" aria-live="polite"></div>
   <div class="quick" id="quick">
     <button type="button" data-q="Resume el caso">📋 Resumir caso</button>
-    <button type="button" data-q="¿Qué puede hacer TRIA+?">✨ Funciones</button>
+    <button type="button" data-q="¿Se le puede dar ibuprofeno?">💊 Ibuprofeno</button>
     <button type="button" data-q="¿Cómo gestionas las solicitudes?">📝 Solicitudes</button>
     <button type="button" data-q="¿Cómo funciona la voz?">🎙 Voz</button>
   </div>
@@ -154,97 +202,162 @@ button:focus-visible,input:focus-visible{outline:3px solid #4bb7bd;outline-offse
 'use strict';
 const $ = id => document.getElementById(id);
 const chat = $('chat'), msgs = $('msgs'), q = $('q');
+let unread = 0, busy = false;
 
+/* ---------- Abrir / minimizar (arranca minimizado) ---------- */
 function openChat(){
-  chat.classList.remove('hidden','collapsed');
+  chat.classList.remove('hidden');
   chat.setAttribute('aria-hidden','false');
   $('launcher').style.display='none';
-  q.focus();
+  $('launcher').setAttribute('aria-expanded','true');
+  unread=0; $('badge').classList.remove('on');
+  q.focus({preventScroll:true});
+  msgs.scrollTop=msgs.scrollHeight;
 }
 function minimizeChat(){
   chat.classList.add('hidden');
-  chat.classList.remove('collapsed');
   chat.setAttribute('aria-hidden','true');
   $('launcher').style.display='flex';
-  $('arrow').textContent='▴';
-  $('minimize').textContent='−';
+  $('launcher').setAttribute('aria-expanded','false');
+  $('launcher').focus({preventScroll:true});
 }
-function closeChat(){ minimizeChat(); }
 $('launcher').addEventListener('click',openChat);
 $('openbtn').addEventListener('click',openChat);
-$('close').addEventListener('click',closeChat);
 $('minimize').addEventListener('click',minimizeChat);
-$('reset').addEventListener('click',()=>{
-  msgs.replaceChildren();
-  addBubble('Demo reiniciada. ¿Qué quieres consultar?','bot');
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape' && !chat.classList.contains('hidden')) minimizeChat();
 });
 
-const normalize = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-const medicationQuestion = /ibuprofeno|medicaci[oó]n|medicamento|antiinflamatorio|analg[eé]sico/i;
-const intents = [
-  {match:/resum|caso|paciente|historia|hc3|antecedent/,response:'📋 RESUMEN DEL CASO SIMULADO\nPaciente DEMO-0082, 74 años. Motivo de consulta: disnea y malestar. Constantes ficticias: SpO₂ 97 %, FC 124 lpm y TA 98/70 mmHg.\n\nTRIA+ propondría recopilar los datos clínicos pertinentes y mostrar alertas para revisión profesional. No asigna una prioridad real en esta demo.'},
-  {match:/solicitud|peticion|administr|registro|document|informe/,response:'📝 APOYO ADMINISTRATIVO (PROPUESTA)\nTRIA+ podría preparar borradores de registros y solicitudes a partir de datos ya introducidos para evitar duplicidades.\n\nAntes de guardar, emitir o cursar cualquier solicitud, el profesional autorizado debe revisarla y validarla.'},
-  {match:/voz|microfono|hablar|dictar|audio/,response:'🎙 TEXTO Y VOZ\nPulsa el micrófono de este chat y dicta tu consulta. Si el navegador permite reconocimiento de voz, el texto aparecerá automáticamente en el campo de entrada.\n\nEsta versión no transmite ni almacena grabaciones por su cuenta. Para uso hospitalario real harían falta garantías de privacidad y una tecnología validada.'},
-  {match:/triaje|prioridad|nivel|clasific|signo|alarma|riesgo|monitor|diagnostic|actuacion/,response:'🩺 APOYO A LA VALORACIÓN (CONCEPTO)\nEn el proyecto real, un sistema clínicamente validado podría señalar información relevante, signos de alarma y posibles necesidades de reevaluación o monitorización.\n\nTRIA+ no emite diagnósticos ni prescribe intervenciones en esta demo. La prioridad y las decisiones corresponden al personal sanitario siguiendo los protocolos.'},
-  {match:/funcion|que haces|que puede|para que sirve|tria\\+|objetiv|ayud|benefici|datos analiza/,response:'✨ FUNCIONES PROPUESTAS DE TRIA+\n• Panel flotante dentro del programa hospitalario.\n• Consulta por texto y voz.\n• Resumen de información clínica autorizada.\n• Alertas y orientaciones de apoyo, tras validación.\n• Borradores administrativos y recordatorios.\n\nTodo diseñado para liberar tiempo de tareas repetitivas, sin sustituir el criterio clínico.'},
-  {match:/hola|buenas|gracias|adios/,response:'¡Hola! Puedes pedirme un resumen de un caso simulado, explicaciones del triaje, información sobre el chat de voz o cómo se prepararían los registros.'}
-];
-function answer(message){
-  if(medicationQuestion.test(message)){
-    return '💊 SOBRE LA ADMINISTRACIÓN DE IBUPROFENO\\nCon la información disponible no podemos confirmar que esté indicado ni que sea seguro administrarlo.\\nAntes habría que revisar alergias, antecedentes, medicación habitual, función renal, riesgo digestivo y motivo de consulta.\\nEn este caso simulado, lo adecuado es no recomendar ni administrar el fármaco sin valoración y validación del profesional responsable.\\nPuedes trasladar la duda al médico o solicitar que valore una pauta de medicación.';
-  }
-  const entry = intents.find(x=>x.match.test(normalize(message)));
-  return entry ? entry.response : '💬 CONSULTA RECIBIDA\nEsta versión es una demo con respuestas programadas, no un modelo de IA general.\n\nNo tengo una respuesta específica para esa pregunta. Prueba «Resume el caso», «¿Qué puede hacer TRIA+?», «¿Cómo gestionas las solicitudes?» o «¿Cómo funciona la voz?». En una versión futura se podría conectar un modelo de lenguaje con controles clínicos y de privacidad.';
-}
-function addBubble(message,who){
+/* ---------- Mensajes ---------- */
+const hora = () => new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+function scrollDown(){ msgs.scrollTop=msgs.scrollHeight; }
+
+function addBubble(text,who,opts={}){
+  const row=document.createElement('div');
+  row.className='row '+who;
   const b=document.createElement('div');
-  b.className='bubble '+who;
-  b.textContent=message;
-  msgs.appendChild(b);
-  msgs.scrollTop=msgs.scrollHeight;
+  b.className='bubble'+(opts.cls?' '+opts.cls:'');
+  b.textContent=text;
+  row.appendChild(b);
+  const t=document.createElement('div');
+  t.className='time'; t.textContent=hora();
+  row.appendChild(t);
+  msgs.appendChild(row);
+  scrollDown();
+  if(who==='bot' && chat.classList.contains('hidden')){
+    unread++; $('badge').textContent=unread; $('badge').classList.add('on');
+  }
+  return row;
 }
+function typingRow(){
+  const row=document.createElement('div');
+  row.className='row bot';
+  row.innerHTML='<div class="bubble typing" aria-label="TRIA+ está escribiendo"><i></i><i></i><i></i></div>';
+  msgs.appendChild(row); scrollDown();
+  return row;
+}
+function welcome(){
+  addBubble('¡Hola! Soy TRIA+ Assist.\nPuedo mostrarte cómo apoyaríamos a enfermería en el triaje y la gestión de registros.\n\n¿Qué te gustaría consultar?','bot');
+}
+$('reset').addEventListener('click',()=>{
+  msgs.replaceChildren(); busy=false; welcome();
+  $('status').textContent='Demo reiniciada.';
+});
+
+/* ---------- Lógica de respuestas ---------- */
+const normalize = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+
+const medRe = /ibuprofeno|nolotil|metamizol|paracetamol|enantyum|dexketoprofeno|aspirina|antiinflamatorio|aine|analgesic|medicacion|medicamento|farmaco|pauta|dosis|administr\w* (algo|un)|dar(le)? algo/;
+
+const intents = [
+  {re:/resum|caso|paciente|historia|hc3|antecedent/, text:
+'📋 RESUMEN DEL CASO SIMULADO\nPaciente DEMO-0082, 74 años. Motivo de consulta: disnea y malestar.\n\nConstantes ficticias: SpO₂ 97 %, FC 124 lpm (alta) y TA 98/70 mmHg (en el límite).\n\nTRIA+ propondría recopilar los datos clínicos pertinentes y mostrar alertas para revisión profesional. No asigna una prioridad real en esta demo.'},
+  {re:/solicitud|peticion|administrativ|registro|document|informe/, text:
+'📝 APOYO ADMINISTRATIVO (PROPUESTA)\nTRIA+ podría preparar borradores de registros y solicitudes a partir de datos ya introducidos, evitando duplicidades.\n\nAntes de guardar, emitir o cursar cualquier solicitud, el profesional autorizado debe revisarla y validarla.'},
+  {re:/voz|microfono|hablar|dictar|audio/, text:
+'🎙 TEXTO Y VOZ\nPulsa el micrófono del chat y dicta tu consulta. Si el navegador permite reconocimiento de voz, el texto aparecerá en el campo de entrada para que lo revises antes de enviar.\n\nEsta versión no transmite ni almacena grabaciones. Para uso hospitalario real harían falta garantías de privacidad y una tecnología validada.'},
+  {re:/triaje|prioridad|nivel|clasific|signo|alarma|riesgo|monitor|diagnostic|actuacion/, text:
+'🩺 APOYO A LA VALORACIÓN (CONCEPTO)\nEn el proyecto real, un sistema clínicamente validado podría señalar información relevante, signos de alarma y posibles necesidades de reevaluación o monitorización.\n\nTRIA+ no emite diagnósticos ni prescribe intervenciones en esta demo. La prioridad y las decisiones corresponden al personal sanitario siguiendo los protocolos.'},
+  {re:/funcion|que haces|que hace|que puede|para que sirve|tria|objetiv|ayud|benefici|dato/, text:
+'✨ FUNCIONES PROPUESTAS DE TRIA+\n• Panel flotante dentro del programa hospitalario.\n• Consulta por texto y voz.\n• Resumen de información clínica autorizada.\n• Alertas y orientaciones de apoyo, tras validación.\n• Borradores administrativos y recordatorios.\n\nTodo diseñado para liberar tiempo de tareas repetitivas, sin sustituir el criterio clínico.'},
+  {re:/^(hola|buenas|gracias|adios)/, text:
+'¡Hola! Puedes pedirme un resumen del caso simulado, explicaciones del triaje, información sobre la voz o cómo se prepararían los registros.'}
+];
+const fallback='💬 CONSULTA RECIBIDA\nEsta versión es una demo con respuestas programadas, no un modelo de IA general.\n\nNo tengo respuesta específica para esa pregunta. Prueba «Resume el caso», «¿Se le puede dar ibuprofeno?», «¿Qué puede hacer TRIA+?» o «¿Cómo funciona la voz?». En una versión futura se podría conectar un modelo de lenguaje con controles clínicos y de privacidad.';
+
+/* ---------- Respuesta especial: medicación ---------- */
+function medicationReply(){
+  const row=document.createElement('div');
+  row.className='row bot';
+  const b=document.createElement('div');
+  b.className='bubble alertcard';
+  b.innerHTML=
+    '<h4>💊 Ibuprofeno: no indicado con los datos actuales</h4>'+
+    'Con la información que tenemos ahora, <b>no está indicado administrar ibuprofeno</b> a este paciente.'+
+    '<ul>'+
+    '<li>Tiene 74 años, disnea y FC elevada con TA en el límite: aún no se ha descartado una causa cardiaca o respiratoria, y los AINE pueden empeorar la insuficiencia cardiaca, la función renal y la tensión.</li>'+
+    '<li>Faltan datos clave: alergias, medicación habitual (anticoagulantes, antihipertensivos, diuréticos), función renal y riesgo digestivo.</li>'+
+    '<li>Un analgésico puede enmascarar síntomas antes de la valoración.</li>'+
+    '</ul>'+
+    '<div style="margin-top:8px"><b>Recomendación:</b> no administrar hasta que el médico valore y valide la pauta.</div>';
+  const actions=document.createElement('div');
+  actions.className='actions';
+  const mk=(label,cls,done,msg)=>{
+    const btn=document.createElement('button');
+    btn.type='button'; btn.textContent=label; btn.className=cls;
+    btn.addEventListener('click',()=>{
+      btn.disabled=true; btn.textContent=done;
+      addBubble(msg,'bot');
+    });
+    return btn;
+  };
+  actions.append(
+    mk('👨‍⚕️ Enviar consulta al médico','primary','✓ Consulta preparada para el médico','Consulta preparada para el médico (simulación). No se ha enviado a ningún sistema hospitalario.'),
+    mk('💊 Solicitar valoración de medicación','','✓ Valoración solicitada','Solicitud de valoración de medicación registrada en esta demo. No se ha prescrito ni solicitado ningún fármaco real.')
+  );
+  b.appendChild(actions);
+  row.appendChild(b);
+  const t=document.createElement('div'); t.className='time'; t.textContent=hora();
+  row.appendChild(t);
+  return row;
+}
+
+function reply(message){
+  const n=normalize(message);
+  if(medRe.test(n)) return {node:medicationReply()};
+  const hit=intents.find(x=>x.re.test(n));
+  return {text: hit ? hit.text : fallback};
+}
+
 function send(message){
   const value=String(message||'').trim();
-  if(!value)return;
+  if(!value || busy) return;
+  busy=true;
   addBubble(value,'me');
   q.value='';
-  const reply=answer(value);
-  addBubble(reply,'bot');
-  if(medicationQuestion.test(value)) addMedicationActions();
-}
-function addMedicationActions(){
-  const wrap=document.createElement('div');
-  wrap.className='quick';
-  wrap.style.padding='0 2px 2px';
-  wrap.style.background='transparent';
-  wrap.style.alignSelf='flex-start';
-  const doctor=document.createElement('button');
-  doctor.type='button';
-  doctor.textContent='Enviar consulta al médico';
-  const medication=document.createElement('button');
-  medication.type='button';
-  medication.textContent='Solicitar valoración de medicación';
-  doctor.addEventListener('click',()=>{
-    addBubble('Consulta preparada para el médico (simulación). No se ha enviado a ningún sistema hospitalario.','bot');
-    doctor.disabled=true;
-    doctor.textContent='Consulta preparada ✓';
-  });
-  medication.addEventListener('click',()=>{
-    addBubble('Solicitud de valoración de medicación registrada en esta demo. No se ha prescrito ni solicitado ningún fármaco real.','bot');
-    medication.disabled=true;
-    medication.textContent='Valoración solicitada ✓';
-  });
-  wrap.append(doctor,medication);
-  msgs.appendChild(wrap);
-  msgs.scrollTop=msgs.scrollHeight;
+  const dots=typingRow();
+  setTimeout(()=>{
+    dots.remove();
+    const r=reply(value);
+    if(r.node){
+      msgs.appendChild(r.node);
+      scrollDown();
+      if(chat.classList.contains('hidden')){unread++;$('badge').textContent=unread;$('badge').classList.add('on');}
+    } else addBubble(r.text,'bot');
+    busy=false;
+  },650);
 }
 $('form').addEventListener('submit',e=>{e.preventDefault();send(q.value);});
 document.querySelectorAll('[data-q]').forEach(el=>el.addEventListener('click',()=>send(el.dataset.q)));
+document.querySelectorAll('[data-ask]').forEach(el=>el.addEventListener('click',()=>{
+  openChat(); send(el.dataset.ask);
+}));
 
+/* ---------- Voz ---------- */
 let recognition=null, recording=false;
-const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
-if(SpeechRecognition){
-  recognition=new SpeechRecognition();
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(SR){
+  recognition=new SR();
   recognition.lang='es-ES';
   recognition.interimResults=false;
   recognition.maxAlternatives=1;
@@ -253,105 +366,72 @@ if(SpeechRecognition){
     $('status').textContent='Texto dictado. Comprueba el contenido y pulsa enviar.';
     q.focus();
   };
-  recognition.onerror=e=>{
-    $('status').textContent='El micrófono no está disponible ('+e.error+'). Puedes escribir.';
-  };
-  recognition.onend=()=>{
-    recording=false;
-    $('mic').classList.remove('active');
-    $('mic').textContent='🎤';
-  };
+  recognition.onerror=e=>{ $('status').textContent='El micrófono no está disponible ('+e.error+'). Puedes escribir.'; };
+  recognition.onend=()=>{ recording=false; $('mic').classList.remove('active'); $('mic').textContent='🎤'; };
 }
 $('mic').addEventListener('click',()=>{
-  if(!recognition){
-    $('status').textContent='Este navegador no admite dictado aquí. Prueba Chrome/Edge o escribe tu consulta.';
-    return;
-  }
-  if(recording){recognition.stop();return;}
+  if(!recognition){ $('status').textContent='Este navegador no admite dictado. Prueba Chrome/Edge o escribe tu consulta.'; return; }
+  if(recording){ recognition.stop(); return; }
   try{
-    recognition.start();
-    recording=true;
-    $('mic').classList.add('active');
-    $('mic').textContent='■';
+    recognition.start(); recording=true;
+    $('mic').classList.add('active'); $('mic').textContent='■';
     $('status').textContent='Escuchando… habla ahora.';
-  }catch(error){
-    $('status').textContent='No se pudo activar el micrófono. Comprueba los permisos o escribe tu consulta.';
-  }
+  }catch(err){ $('status').textContent='No se pudo activar el micrófono. Comprueba los permisos o escribe tu consulta.'; }
 });
 
-// Arrastrar la ventana desde su cabecera en escritorio.
+/* ---------- Arrastrar ventana (escritorio) ---------- */
 let dragging=false,dx=0,dy=0;
-$('draghead').addEventListener('pointerdown',e=>{
-  if(e.target.closest('button')||window.innerWidth<650||chat.classList.contains('collapsed'))return;
+const head=$('draghead');
+head.addEventListener('pointerdown',e=>{
+  if(e.target.closest('button')||window.innerWidth<650) return;
   dragging=true;
-  const rect=chat.getBoundingClientRect();
-  dx=e.clientX-rect.left; dy=e.clientY-rect.top;
-  $('draghead').setPointerCapture(e.pointerId);
+  const r=chat.getBoundingClientRect();
+  dx=e.clientX-r.left; dy=e.clientY-r.top;
+  head.setPointerCapture(e.pointerId);
 });
-$('draghead').addEventListener('pointermove',e=>{
-  if(!dragging)return;
-  const maxX=window.innerWidth-chat.offsetWidth-5;
-  const maxY=window.innerHeight-chat.offsetHeight-5;
-  const x=Math.min(Math.max(5,e.clientX-dx),Math.max(5,maxX));
-  const y=Math.min(Math.max(5,e.clientY-dy),Math.max(5,maxY));
-  chat.style.left=x+'px'; chat.style.top=y+'px';
+head.addEventListener('pointermove',e=>{
+  if(!dragging) return;
+  const maxX=Math.max(5,window.innerWidth-chat.offsetWidth-5);
+  const maxY=Math.max(5,window.innerHeight-chat.offsetHeight-5);
+  chat.style.left=Math.min(Math.max(5,e.clientX-dx),maxX)+'px';
+  chat.style.top=Math.min(Math.max(5,e.clientY-dy),maxY)+'px';
   chat.style.right='auto'; chat.style.bottom='auto';
 });
-$('draghead').addEventListener('pointerup',()=>dragging=false);
-$('draghead').addEventListener('pointercancel',()=>dragging=false);
+['pointerup','pointercancel'].forEach(ev=>head.addEventListener(ev,()=>dragging=false));
 
-// Semáforo orientativo para la demo. No equivale a una escala clínica validada.
-function classify(value,limits){
-  if(value>=limits.green[0]&&value<=limits.green[1])return 'ok';
-  if(value>=limits.yellow[0]&&value<=limits.yellow[1])return 'warn';
+/* ---------- Semáforo orientativo de constantes ---------- */
+function classify(v,l){
+  if(v>=l.green[0]&&v<=l.green[1]) return 'ok';
+  if(v>=l.yellow[0]&&v<=l.yellow[1]) return 'warn';
   return 'bad';
 }
-function paintMetric(key,value,text,state){
+function paint(key,text,state){
   const box=$('box-'+key);
-  box.classList.remove('ok','warn','bad');
-  box.classList.add(state);
+  box.classList.remove('ok','warn','bad'); box.classList.add(state);
   $('m-'+key).textContent=text;
   $('s-'+key).textContent=state==='ok'?'En rango':state==='warn'?'En el límite':'Fuera de rango';
 }
-function actualizarConstantes(spo2,fc,taSist,taDiast){
-  const spo2State=classify(spo2,{green:[95,100],yellow:[90,94]});
-  // Para esta demo: 50–100 lpm verde, 101–120 amarillo; fuera de esos rangos, rojo.
-  const fcState=classify(fc,{green:[50,100],yellow:[101,120]});
-  // La TA se valora con ambos componentes: ambos deben estar en rango para salir verde.
-  let taState='ok';
-  if(taSist<90||taSist>=160||taDiast<60||taDiast>=100)taState='bad';
-  else if(taSist<100||taSist>=140||taDiast<65||taDiast>=90)taState='warn';
-  paintMetric('spo2',spo2,spo2+' %',spo2State);
-  paintMetric('fc',fc,fc+' lpm',fcState);
-  paintMetric('ta',taSist+'/'+taDiast+' mmHg',taSist+'/'+taDiast+' mmHg',taState);
+function actualizarConstantes(spo2,fc,sis,dia){
+  const sState=classify(spo2,{green:[95,100],yellow:[90,94]});
+  const fState=classify(fc,{green:[50,100],yellow:[101,120]});
+  let tState='ok';
+  if(sis<90||sis>=160||dia<60||dia>=100) tState='bad';
+  else if(sis<100||sis>=140||dia<65||dia>=90) tState='warn';
+  paint('spo2',spo2+' %',sState);
+  paint('fc',fc+' lpm',fState);
+  paint('ta',sis+'/'+dia+' mmHg',tState);
 }
 actualizarConstantes(97,124,98,70);
+const presets={green:[98,78,120,80],yellow:[93,110,95,65],red:[88,130,85,55]};
+document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>actualizarConstantes(...presets[b.dataset.preset])));
 
-// Presets de prueba: los tres estados quedan claramente diferenciados.
-const presets={
-  green:[98,78,120,80],
-  yellow:[93,110,95,65],
-  red:[88,130,85,55]
-};
-document.querySelectorAll('[data-preset]').forEach(button=>{
-  button.addEventListener('click',()=>{
-    actualizarConstantes(...presets[button.dataset.preset]);
-  });
-});
-
-// Parámetros de URL para modo presentación.
-const params=new URLSearchParams(window.location.search);
-if(params.get('kiosk')==='1'){
-  openChat();
-  document.querySelector('.topbar').style.display='none';
-}
-if(params.get('auto')==='resumen'){
-  window.setTimeout(()=>send('Resume el caso'),700);
-}
+/* ---------- Inicio ---------- */
+welcome();
+const params=new URLSearchParams(location.search);
+if(params.get('kiosk')==='1'){ openChat(); document.querySelector('.topbar').style.display='none'; }
+if(params.get('auto')==='resumen'){ setTimeout(()=>{openChat();send('Resume el caso');},700); }
 if(params.get('readonly')==='1'){
-  q.disabled=true;
-  $('mic').style.display='none';
-  document.querySelector('.send').style.display='none';
+  q.disabled=true; $('mic').style.display='none'; document.querySelector('.send').style.display='none';
   $('status').textContent='Modo demostración: solo lectura.';
 }
 </script>
