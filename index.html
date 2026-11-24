@@ -64,7 +64,7 @@ button:disabled{cursor:default}
 
 /* Chat */
 .chat{position:fixed;right:24px;bottom:90px;width:min(420px,calc(100vw - 28px));height:min(660px,calc(100vh - 115px));display:flex;flex-direction:column;border-radius:22px;background:#fff;box-shadow:0 24px 70px #15365e5c;overflow:hidden;border:1px solid #c9dce9;z-index:4;transition:opacity .2s,transform .2s}
-.chat.hidden{opacity:0;pointer-events:none;transform:translateY(15px);visibility:hidden}
+.chat.hidden{display:none!important;opacity:0;pointer-events:none;transform:translateY(15px);visibility:hidden}
 .chathead{background:linear-gradient(110deg,#214a73,#127e90);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:15px 17px;cursor:move;touch-action:none;user-select:none}
 .chattitle{font-size:20px;font-weight:800}.chatmeta{font-size:11px;color:#d8f4f3;margin-top:4px}
 .headbtn{background:#ffffff1e;color:#fff;border:1px solid #ffffff50;border-radius:8px;width:31px;height:31px;font-size:18px;line-height:1}
@@ -212,18 +212,18 @@ function openChat(){
   q.focus({preventScroll:true});
   msgs.scrollTop=msgs.scrollHeight;
 }
-function minimizeChat(){
+function minimizeChat(restoreFocus = true){
   chat.classList.add('hidden');
   chat.setAttribute('aria-hidden','true');
   $('launcher').style.display='flex';
   $('launcher').setAttribute('aria-expanded','false');
-  $('launcher').focus({preventScroll:true});
+  if(restoreFocus) $('launcher').focus({preventScroll:true});
 }
 $('launcher').addEventListener('click',openChat);
 $('openbtn').addEventListener('click',openChat);
-$('minimize').addEventListener('click',minimizeChat);
+$('minimize').addEventListener('click',() => minimizeChat(true));
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape' && !chat.classList.contains('hidden')) minimizeChat();
+  if(e.key==='Escape' && !chat.classList.contains('hidden')) minimizeChat(true);
 });
 
 /* ---------- Mensajes ---------- */
@@ -323,7 +323,7 @@ function send(message){
       addBubble(r.text,'bot');
     }
     busy=false;
-  },650);
+  },1300); // Tiempo de escritura duplicado (antes 650ms)
 }
 
 /* ---------- Eventos de envío (Enter y botón enviar) ---------- */
@@ -420,6 +420,7 @@ const presets={green:[98,78,120,80],yellow:[93,110,95,65],red:[88,130,85,55]};
 document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>actualizarConstantes(...presets[b.dataset.preset])));
 
 /* ---------- Inicio ---------- */
+minimizeChat(false);
 welcome();
 const params=new URLSearchParams(location.search);
 if(params.get('kiosk')==='1'){ openChat(); document.querySelector('.topbar').style.display='none'; }
