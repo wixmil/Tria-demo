@@ -34,6 +34,7 @@ button:disabled{cursor:default}
 .field b{text-align:right}
 .field b.mono{font-family:ui-monospace,"SF Mono",Consolas,monospace;letter-spacing:.4px}
 .patient{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.patient.sub{margin-top:10px}
 .metric{padding:13px;background:var(--soft);border:1px solid var(--line);border-radius:14px;transition:background .25s,border-color .25s}
 .metric small{display:block;color:#536d88;font-size:11px;margin-bottom:6px}
 .metric strong{display:block;font-size:17px}
@@ -42,7 +43,7 @@ button:disabled{cursor:default}
 .metric.warn{background:#fff6e0;border-color:#f0d38a}.metric.warn .state{color:#946000}
 .metric.bad{background:#fde8e8;border-color:#f0b0b0}.metric.bad .state{color:#a52c2c}
 .warning{background:#fff7eb;color:#8b590f;border:1px solid #f7dbac;padding:12px 14px;border-radius:12px;margin-top:14px;font-size:12px;line-height:1.5}
-.helper{font-size:13px;color:#6b8095;line-height:1.6;margin:10px 0}
+.helper{font-size:13px;color:#6b8095;line-height:1.6;margin:14px 0 8px}
 .footer{font-size:12px;color:#7489a0;margin-top:24px}
 .testpanel{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center}
 .testpanel .lbl{font-size:12px;color:var(--muted);margin-right:2px}
@@ -50,7 +51,7 @@ button:disabled{cursor:default}
 .testpanel .t-ok{border-color:#a8e0c0;color:#1f874e}.testpanel .t-warn{border-color:#f0d38a;color:#a87500}.testpanel .t-bad{border-color:#f0b0b0;color:#c23c3c}
 
 /* Historia clínica abierta */
-.hc-doc{background:#f8fbfe;border:1px solid #dbe6f2;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.hc-doc{background:#f8fbfe;border:1px solid #dbe6f2;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
 .hc-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding-bottom:10px;border-bottom:1px solid #e2ecf6;font-size:12px;color:#4a6582}
 .hc-block{background:#fff;border:1px solid #e4edf6;border-radius:12px;padding:12px 14px}
 .hc-block h3{margin:0 0 6px;font-size:13px;color:#1a3554}
@@ -58,7 +59,7 @@ button:disabled{cursor:default}
 .hc-list{margin:6px 0 0;padding-left:18px;font-size:12.5px;line-height:1.55;color:#3c5570}
 .hc-list li{margin:3px 0}
 
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
 .chips button{border:1px solid #b7dce0;border-radius:30px;background:#f1fbfa;color:#236779;font-size:12px;padding:7px 12px}
 .chips button:hover{background:#e0f5f3}
 .formbutton{background:#1f7d91;color:#fff;border:0;border-radius:10px;padding:11px 16px;font-weight:700}
@@ -122,13 +123,13 @@ button:disabled{cursor:default}
 </head>
 <body>
 <header class="topbar">
-  <div class="brand">✚ TRIA<span>+</span> <small>Entorno hospitalario · SIMULACIÓN</small></div>
-  <div class="topright">● Urgencias / Triaje &nbsp; | &nbsp; Usuario: Enfermería demo</div>
+  <div class="brand">✚ TRIA<span>+</span> <small>Entorno hospitalario</small></div>
+  <div class="topright">● Urgencias / Triaje &nbsp; | &nbsp; Usuario: Enfermería</div>
 </header>
 
 <main class="shell">
   <div class="heading">
-    <div><h1>Panel de valoración de Urgencias</h1><p>Paciente seleccionado · Entorno ficticio para presentación académica</p></div>
+    <div><h1>Panel de valoración de Urgencias</h1><p>Paciente seleccionado · Entorno de presentación académica</p></div>
     <div class="tag">● Caso simulado</div>
   </div>
 
@@ -149,9 +150,13 @@ button:disabled{cursor:default}
         <div class="metric" id="box-ta"><small>TA</small><strong id="m-ta">98/70 mmHg</strong><span class="state" id="s-ta">En el límite</span></div>
       </div>
 
-      <div class="field" style="margin-top:10px"><span>Constantes complementarias (sim.)</span><b>FR 24 rpm · T.ª 36,8 °C · Gluc. 118 mg/dL</b></div>
+      <div class="patient sub" aria-label="Constantes complementarias">
+        <div class="metric warn"><small>Frec. Respiratoria</small><strong>24 rpm</strong><span class="state">Taquipnea leve</span></div>
+        <div class="metric ok"><small>Temperatura</small><strong>36,8 °C</strong><span class="state">Afebril</span></div>
+        <div class="metric ok"><small>Glucemia capilar</small><strong>118 mg/dL</strong><span class="state">En rango</span></div>
+      </div>
 
-      <div class="warning">⚠ Valores y datos clínicos ficticios para demostrar la interfaz. Los colores son orientativos y no deben utilizarse para valorar pacientes ni asignar prioridades clínicas.</div>
+      <div class="warning">⚠ Los colores de las constantes son orientativos y no deben utilizarse para valorar pacientes ni asignar prioridades clínicas.</div>
       <div class="testpanel" role="group" aria-label="Pruebas de constantes">
         <span class="lbl">Probar constantes:</span>
         <button class="t-ok" type="button" data-preset="green">Verde</button>
@@ -161,16 +166,16 @@ button:disabled{cursor:default}
     </section>
 
     <section class="panel">
-      <h2>Historia clínica abierta (HC3 · Simulación) <span class="pill-info">Episodio #URG-2026-884</span></h2>
+      <h2>Historia clínica abierta (HC3) <span class="pill-info">Episodio #URG-2026-884</span></h2>
       <div class="hc-doc">
         <div class="hc-top">
           <span><b>Paciente:</b> Ramón XXXX XXXX (74 años)</span>
           <span><b>HC3:</b> <span class="mono">HC3-0048-27X6</span></span>
-          <span><b>Box asignado:</b> Triaje / Box 04 (ficticio)</span>
+          <span><b>Box asignado:</b> Triaje / Box 04</span>
         </div>
 
         <div class="hc-block">
-          <h3>Antecedentes personales (ficticios)</h3>
+          <h3>Antecedentes personales</h3>
           <p>Hipertensión arterial de larga evolución, cardiopatía isquémica crónica estable, insuficiencia cardiaca con fracción de eyección ligeramente reducida y dislipemia. Exfumador desde hace 12 años.</p>
         </div>
 
@@ -180,21 +185,21 @@ button:disabled{cursor:default}
         </div>
 
         <div class="hc-block">
-          <h3>Registro de enfermería y pruebas solicitadas (sim.)</h3>
+          <h3>Registro de enfermería y pruebas solicitadas</h3>
           <ul class="hc-list">
             <li><b>19:14:</b> Recepción en triaje, toma de constantes iniciales y monitorización continua.</li>
             <li><b>19:16:</b> Canalización de acceso venoso periférico pendiente de validación médica.</li>
-            <li><b>Solicitudes en curso (ficticias):</b> ECG de 12 derivaciones, analítica con función renal/iones/BNP y radiografía de tórax portátil.</li>
+            <li><b>Solicitudes en curso:</b> ECG de 12 derivaciones, analítica con función renal/iones/BNP y radiografía de tórax portátil.</li>
           </ul>
         </div>
       </div>
 
       <p class="helper">Consultas rápidas de demostración:</p>
       <div class="chips">
-        <button type="button" data-ask="Resume el caso">Resume el caso</button>
-        <button type="button" data-ask="Explícame el triaje">Explícame el triaje</button>
-        <button type="button" data-ask="¿Qué ocurre con las solicitudes?">Solicitudes</button>
-        <button type="button" data-ask="¿Qué puede hacer TRIA+?">¿Qué hace TRIA+?</button>
+        <button type="button" data-preset-key="resumen" data-ask="Resume el caso">Resume el caso</button>
+        <button type="button" data-preset-key="triaje" data-ask="Explícame el triaje">Explícame el triaje</button>
+        <button type="button" data-preset-key="solicitudes" data-ask="¿Qué ocurre con las solicitudes?">Solicitudes</button>
+        <button type="button" data-preset-key="funciones" data-ask="¿Qué puede hacer TRIA+?">¿Qué hace TRIA+?</button>
       </div>
       <button class="formbutton" id="openbtn" type="button">Abrir asistente TRIA+ ↗</button>
     </section>
@@ -208,7 +213,7 @@ button:disabled{cursor:default}
 
 <section class="chat hidden" id="chat" role="dialog" aria-label="Asistente flotante TRIA+" aria-hidden="true">
   <div class="chathead" id="draghead">
-    <div><div class="chattitle">✚ TRIA+ Assist</div><div class="chatmeta"><span class="dot"></span> Chat clínico · Texto y voz (demo)</div></div>
+    <div><div class="chattitle">✚ TRIA+ Assist</div><div class="chatmeta"><span class="dot"></span> Chat clínico · Texto y voz</div></div>
     <div style="display:flex;gap:6px">
       <button class="headbtn" title="Reiniciar conversación" aria-label="Reiniciar conversación" id="reset" type="button">↻</button>
       <button class="headbtn" title="Minimizar" aria-label="Minimizar" id="minimize" type="button">−</button>
@@ -217,13 +222,13 @@ button:disabled{cursor:default}
   <div class="notice">🔒 Prototipo con respuestas predefinidas · Sin conexión a datos reales</div>
   <div class="msgs" id="msgs" aria-live="polite"></div>
   <div class="quick" id="quick">
-    <button type="button" data-q="Resume el caso">📋 Resumir caso</button>
-    <button type="button" data-q="¿Cómo gestionas las solicitudes?">📝 Solicitudes</button>
-    <button type="button" data-q="¿Cómo funciona la voz?">🎙 Voz</button>
+    <button type="button" data-preset-key="resumen" data-q="Resume el caso">📋 Resumir caso</button>
+    <button type="button" data-preset-key="solicitudes" data-q="¿Cómo gestionas las solicitudes?">📝 Solicitudes</button>
+    <button type="button" data-preset-key="triaje" data-q="Explícame el triaje">🩺 Valoración triaje</button>
   </div>
   <form class="chatbottom" id="form">
     <div class="entry">
-      <input id="q" type="text" placeholder="Escribe una consulta clínica de ejemplo..." aria-label="Mensaje" autocomplete="off" maxlength="500">
+      <input id="q" type="text" placeholder="Escribe una consulta clínica..." aria-label="Mensaje" autocomplete="off" maxlength="500">
       <button type="button" class="round" id="mic" title="Dictar mensaje" aria-label="Dictar mensaje">🎤</button>
       <button type="submit" class="round send" id="sendbtn" title="Enviar" aria-label="Enviar mensaje">➤</button>
     </div>
@@ -297,10 +302,22 @@ function welcome(){
 }
 $('reset').addEventListener('click',()=>{
   msgs.replaceChildren(); busy=false; welcome();
-  $('status').textContent='Demo reiniciada.';
+  $('status').textContent='Conversación reiniciada.';
 });
 
-/* ---------- Respuesta especial: medicación (siempre devuelve esta respuesta) ---------- */
+/* ---------- Respuestas predefinidas para cada botón ---------- */
+const presetReplies = {
+  resumen:
+'📋 RESUMEN DEL CASO\nPaciente: Ramón XXXX XXXX (DEMO-0082), varón de 74 años. Motivo de consulta: disnea progresiva de 48 h y malestar general.\n\nAntecedentes y tratamiento: HTA, cardiopatía isquémica e insuficiencia cardiaca; en tratamiento con Enalapril 10 mg, Furosemida 40 mg y AAS 100 mg.\n\nConstantes actuales: SpO₂ 97 %, FC 124 lpm (elevada), TA 98/70 mmHg (en el límite) y FR 24 rpm.\n\nTRIA+ recopila los datos clínicos relevantes y muestra alertas para revisión profesional.',
+  triaje:
+'🩺 APOYO A LA VALORACIÓN DE TRIAJE\nEn este paciente con antecedente de insuficiencia cardiaca, taquicardia (124 lpm), taquipnea leve (24 rpm) y TA en el límite (98/70 mmHg), el sistema destacaría signos de alarma cardiorrespiratoria y sugeriría monitorización estrecha y prioridad preferente.\n\nTRIA+ no emite diagnósticos ni sustituye la escala oficial de triaje: la asignación final corresponde siempre al personal sanitario.',
+  solicitudes:
+'📝 GESTIÓN DE SOLICITUDES Y REGISTROS\nSegún el protocolo para disnea y antecedentes cardiacos, TRIA+ prepara borradores de pruebas complementarias (ECG de 12 derivaciones, analítica con iones, función renal y BNP, y radiografía de tórax) además del registro de acceso venoso.\n\nNinguna solicitud se cursa automáticamente sin la revisión y firma del profesional autorizado.',
+  funciones:
+'✨ ¿QUÉ PUEDE HACER TRIA+?\n• Asistente flotante integrado en la estación clínica (HC3).\n• Consulta rápida mediante texto o dictado por voz.\n• Síntesis estructurada de antecedentes, alergias y constantes.\n• Alertas de seguridad farmacológica e interacciones.\n• Borradores de registros de enfermería y peticiones.'
+};
+
+/* ---------- Respuesta especial: medicación (para cualquier texto escrito) ---------- */
 function medicationReply(){
   const row=document.createElement('div');
   row.className='row bot';
@@ -327,8 +344,8 @@ function medicationReply(){
     return btn;
   };
   actions.append(
-    mk('👨‍⚕️ Enviar consulta al médico','primary','✓ Consulta preparada para el médico','Consulta preparada para el médico (simulación). No se ha enviado a ningún sistema hospitalario.'),
-    mk('💊 Solicitar valoración de medicación','','✓ Valoración solicitada','Solicitud de valoración de medicación registrada en esta demo. No se ha prescrito ni solicitado ningún fármaco real.')
+    mk('👨‍⚕️ Enviar consulta al médico','primary','✓ Consulta preparada para el médico','Consulta preparada para el médico. Pendiente de validación en el sistema hospitalario.'),
+    mk('💊 Solicitar valoración de medicación','','✓ Valoración solicitada','Solicitud de valoración de medicación registrada. Pendiente de revisión médica.')
   );
   b.appendChild(actions);
   row.appendChild(b);
@@ -337,28 +354,24 @@ function medicationReply(){
   return row;
 }
 
-/* ---------- Lógica de respuestas ---------- */
-function reply(){
-  // Ponga lo que ponga el usuario, devuelve siempre la respuesta predeterminada de ibuprofeno
-  return {node: medicationReply()};
-}
-
-function send(message){
+/* ---------- Envío de mensajes ---------- */
+function send(message, presetKey = null){
   const value=String(message||'').trim();
   if(!value || busy) return;
   busy=true;
   addBubble(value,'me');
-  q.value='';
+  if(!presetKey) q.value='';
   const dots=typingRow();
   setTimeout(()=>{
     dots.remove();
-    const r=reply();
-    if(r.node){
-      msgs.appendChild(r.node);
-      scrollDown();
-      if(chat.classList.contains('hidden')){unread++;$('badge').textContent=unread;$('badge').classList.add('on');}
+    if(presetKey && presetReplies[presetKey]){
+      addBubble(presetReplies[presetKey],'bot');
     } else {
-      addBubble(r.text,'bot');
+      msgs.appendChild(medicationReply());
+      scrollDown();
+      if(chat.classList.contains('hidden')){
+        unread++; $('badge').textContent=unread; $('badge').classList.add('on');
+      }
     }
     busy=false;
   },1300);
@@ -380,12 +393,18 @@ q.addEventListener('keydown', e => {
   }
 });
 
-document.querySelectorAll('[data-q]').forEach(el=>el.addEventListener('click',()=>send(el.dataset.q)));
-document.querySelectorAll('[data-ask]').forEach(el=>el.addEventListener('click',()=>{
-  openChat(); send(el.dataset.ask);
+/* Botones rápidos dentro del chat */
+document.querySelectorAll('[data-q]').forEach(el=>el.addEventListener('click',()=>{
+  send(el.dataset.q, el.dataset.presetKey);
 }));
 
-/* ---------- Voz ---------- */
+/* Botones rápidos en la pantalla principal */
+document.querySelectorAll('[data-ask]').forEach(el=>el.addEventListener('click',()=>{
+  openChat();
+  send(el.dataset.ask, el.dataset.presetKey);
+}));
+
+/* ---------- Voz (solo botón micrófono) ---------- */
 let recognition=null, recording=false;
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 if(SR){
@@ -462,7 +481,7 @@ minimizeChat(false);
 welcome();
 const params=new URLSearchParams(location.search);
 if(params.get('kiosk')==='1'){ document.querySelector('.topbar').style.display='none'; minimizeChat(false); }
-if(params.get('auto')==='resumen'){ setTimeout(()=>{openChat();send('Resume el caso');},700); }
+if(params.get('auto')==='resumen'){ setTimeout(()=>{openChat();send('Resume el caso','resumen');},700); }
 if(params.get('readonly')==='1'){
   q.disabled=true; $('mic').style.display='none'; $('sendbtn').style.display='none';
   $('status').textContent='Modo demostración: solo lectura.';
