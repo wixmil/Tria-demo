@@ -2,140 +2,196 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<meta name="description" content="Demo interactiva académica de TRIA+ Assist: asistente de apoyo a enfermería en triaje (caso simulado, sin datos reales).">
+<meta name="theme-color" content="#254a75">
+<meta name="color-scheme" content="light">
 <title>TRIA+ Assist | Demo interactiva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23254a75'/%3E%3Cpath d='M13 7h6v6h6v6h-6v6h-6v-6H7v-6h6z' fill='%234ec7c5'/%3E%3C/svg%3E">
 <style>
 :root{
-  font-family:Inter,"Segoe UI",system-ui,Arial,sans-serif;
-  --navy:#1a3554;--navy2:#254a75;--teal:#127e90;--teal2:#4ec7c5;
-  --muted:#67809d;--line:#dce6f1;--bg:#e9f0f8;--soft:#f3f7fb;
+  font-family:Inter,"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+  --navy:#1a3554;--navy2:#254a75;--teal:#127e90;--teal-dark:#0c6677;--teal2:#4ec7c5;
+  --muted:#5b7390;--line:#dce6f1;--bg:#e9f0f8;--soft:#f3f7fb;
+  --ok-bg:#e6f7ee;--ok-bd:#a8e0c0;--ok-tx:#167344;
+  --warn-bg:#fff6e0;--warn-bd:#f0d38a;--warn-tx:#8a5800;
+  --bad-bg:#fde8e8;--bad-bd:#f0b0b0;--bad-tx:#a52c2c;
   color:var(--navy);background:var(--bg)
 }
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:linear-gradient(140deg,#dce8f6,#f4f8fc)}
-button,input{font:inherit}button{cursor:pointer}
-button:focus-visible,input:focus-visible{outline:3px solid #4bb7bd;outline-offset:2px}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;min-height:100dvh;background:linear-gradient(140deg,#dce8f6,#f4f8fc);background-attachment:fixed}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid #2c9aa6;outline-offset:2px}
 button:disabled{cursor:default}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:-999px;top:8px;background:#fff;color:var(--navy);padding:8px 12px;border-radius:8px;z-index:20}
+.skip:focus{left:8px}
 
-.topbar{height:70px;background:var(--navy2);color:#fff;display:flex;align-items:center;padding:0 36px;justify-content:space-between;box-shadow:0 3px 18px #1d406327}
+.topbar{min-height:70px;background:var(--navy2);color:#fff;display:flex;align-items:center;padding:0 36px;justify-content:space-between;box-shadow:0 3px 18px #1d406327}
 .brand{font-size:26px;font-weight:800;letter-spacing:-1px}.brand span{color:var(--teal2)}
 .brand small{font-size:12px;font-weight:400;margin-left:13px;letter-spacing:0;opacity:.85}
 .topright{font-size:13px;color:#dbeaf6}
-.shell{max-width:1350px;margin:28px auto;padding:0 22px}
+.shell{max-width:1350px;margin:28px auto;padding:0 22px 90px}
 .heading{display:flex;align-items:center;justify-content:space-between;gap:16px}
 .heading h1{font-size:25px;margin:0}.heading p{margin:8px 0 0;color:var(--muted)}
-.tag{font-size:12px;padding:9px 12px;background:#d6f1ed;color:#157e79;border-radius:50px;font-weight:700;white-space:nowrap}
+.tag{font-size:12px;padding:9px 12px;background:#d6f1ed;color:#116b66;border-radius:50px;font-weight:700;white-space:nowrap}
 .columns{display:grid;grid-template-columns:1fr 1.15fr;gap:18px;margin-top:26px}
-.panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 10px 30px #31577b12}
-.panel h2{font-size:16px;margin:0 0 16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 10px 30px #31577b12;min-width:0}
+.panel h2{font-size:16px;margin:0 0 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .pill-info{font-size:11px;font-weight:700;background:#eef5fc;color:#2c577d;padding:4px 10px;border-radius:999px}
 .field{font-size:13px;margin:8px 0;padding:9px 13px;background:var(--soft);border-radius:12px;display:flex;justify-content:space-between;gap:12px;align-items:center}
 .field span{color:var(--muted);flex-shrink:0}
-.field b{text-align:right}
-.field b.mono{font-family:ui-monospace,"SF Mono",Consolas,monospace;letter-spacing:.4px}
+.field b{text-align:right;overflow-wrap:anywhere}
+.mono{font-family:ui-monospace,"SF Mono",Consolas,monospace;letter-spacing:.4px}
 .patient{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
 .patient.sub{margin-top:10px}
 .metric{padding:13px;background:var(--soft);border:1px solid var(--line);border-radius:14px;transition:background .25s,border-color .25s}
-.metric small{display:block;color:#536d88;font-size:11px;margin-bottom:6px}
+.metric small{display:block;color:#47617d;font-size:11px;margin-bottom:6px}
 .metric strong{display:block;font-size:17px}
 .metric .state{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-top:5px}
-.metric.ok{background:#e6f7ee;border-color:#a8e0c0}.metric.ok .state{color:#167344}
-.metric.warn{background:#fff6e0;border-color:#f0d38a}.metric.warn .state{color:#946000}
-.metric.bad{background:#fde8e8;border-color:#f0b0b0}.metric.bad .state{color:#a52c2c}
-.warning{background:#fff7eb;color:#8b590f;border:1px solid #f7dbac;padding:12px 14px;border-radius:12px;margin-top:14px;font-size:12px;line-height:1.5}
-.helper{font-size:13px;color:#6b8095;line-height:1.6;margin:14px 0 8px}
-.footer{font-size:12px;color:#7489a0;margin-top:24px}
+.metric.ok{background:var(--ok-bg);border-color:var(--ok-bd)}.metric.ok .state{color:var(--ok-tx)}
+.metric.warn{background:var(--warn-bg);border-color:var(--warn-bd)}.metric.warn .state{color:var(--warn-tx)}
+.metric.bad{background:var(--bad-bg);border-color:var(--bad-bd)}.metric.bad .state{color:var(--bad-tx)}
+.warning{background:#fff7eb;color:#7d500c;border:1px solid #f7dbac;padding:12px 14px;border-radius:12px;margin-top:14px;font-size:12px;line-height:1.5}
+.helper{font-size:13px;color:#566c82;line-height:1.6;margin:14px 0 8px}
+.footer{font-size:12px;color:#5f748b;margin-top:24px}
 .testpanel{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center}
 .testpanel .lbl{font-size:12px;color:var(--muted);margin-right:2px}
 .testpanel button{border:1px solid #c9dce9;background:#f3f8fc;border-radius:9px;padding:7px 11px;font-size:12px;font-weight:700;color:#2b5b7a}
-.testpanel .t-ok{border-color:#a8e0c0;color:#1f874e}.testpanel .t-warn{border-color:#f0d38a;color:#a87500}.testpanel .t-bad{border-color:#f0b0b0;color:#c23c3c}
+.testpanel button[aria-pressed="true"]{box-shadow:inset 0 0 0 2px currentColor}
+.testpanel .t-ok{border-color:var(--ok-bd);color:#1a7344}
+.testpanel .t-warn{border-color:var(--warn-bd);color:#8a5800}
+.testpanel .t-bad{border-color:var(--bad-bd);color:#b03232}
 
-/* Historia clínica abierta */
 .hc-doc{background:#f8fbfe;border:1px solid #dbe6f2;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
-.hc-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding-bottom:10px;border-bottom:1px solid #e2ecf6;font-size:12px;color:#4a6582}
+.hc-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding-bottom:10px;border-bottom:1px solid #e2ecf6;font-size:12px;color:#40597a}
 .hc-block{background:#fff;border:1px solid #e4edf6;border-radius:12px;padding:12px 14px}
-.hc-block h3{margin:0 0 6px;font-size:13px;color:#1a3554}
-.hc-block p{margin:0;font-size:12.5px;line-height:1.55;color:#3c5570}
-.hc-list{margin:6px 0 0;padding-left:18px;font-size:12.5px;line-height:1.55;color:#3c5570}
+.hc-block h3{margin:0 0 6px;font-size:13px;color:var(--navy)}
+.hc-block p{margin:0;font-size:12.5px;line-height:1.55;color:#34506b}
+.hc-list{margin:6px 0 0;padding-left:18px;font-size:12.5px;line-height:1.55;color:#34506b}
 .hc-list li{margin:3px 0}
 
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
-.chips button{border:1px solid #b7dce0;border-radius:30px;background:#f1fbfa;color:#236779;font-size:12px;padding:7px 12px}
+.chips button{border:1px solid #9fd0d6;border-radius:30px;background:#f1fbfa;color:#1d5f72;font-size:12px;padding:7px 12px;transition:background .15s}
 .chips button:hover{background:#e0f5f3}
-.formbutton{background:#1f7d91;color:#fff;border:0;border-radius:10px;padding:11px 16px;font-weight:700}
+.formbutton{background:#1a7a8d;color:#fff;border:0;border-radius:10px;padding:11px 16px;font-weight:700;transition:background .15s}
 .formbutton:hover{background:#176a7c}
 
-/* Launcher */
-.launcher{position:fixed;right:26px;bottom:26px;background:#107e92;color:#fff;border:0;border-radius:100px;box-shadow:0 12px 28px #147c9480;padding:14px 20px;font-weight:800;display:flex;align-items:center;gap:10px;z-index:5;transition:transform .15s,background .15s}
+.launcher{position:fixed;right:calc(26px + env(safe-area-inset-right));bottom:calc(26px + env(safe-area-inset-bottom));background:#0f7589;color:#fff;border:0;border-radius:100px;box-shadow:0 12px 28px #147c9480;padding:14px 20px;font-weight:800;display:flex;align-items:center;gap:10px;z-index:5;transition:transform .15s,background .15s}
 .launcher:hover{background:#0b687d;transform:translateY(-2px)}
+.launcher.hidden{display:none}
 .orb{background:#ffffff30;border-radius:50%;width:28px;height:28px;display:grid;place-items:center;font-size:17px}
-.badge{background:#e45f67;color:#fff;border-radius:50%;width:19px;height:19px;font-size:11px;display:none;place-items:center}
+.badge{background:#d4414a;color:#fff;border-radius:50%;width:19px;height:19px;font-size:11px;display:none;place-items:center}
 .badge.on{display:grid}
 
-/* Chat */
-.chat{position:fixed;right:24px;bottom:90px;width:min(420px,calc(100vw - 28px));height:min(660px,calc(100vh - 115px));display:flex;flex-direction:column;border-radius:22px;background:#fff;box-shadow:0 24px 70px #15365e5c;overflow:hidden;border:1px solid #c9dce9;z-index:4;transition:opacity .2s,transform .2s}
+.chat{position:fixed;right:24px;bottom:90px;width:min(420px,calc(100vw - 28px));height:min(660px,calc(100vh - 115px));height:min(660px,calc(100dvh - 115px));display:flex;flex-direction:column;border-radius:22px;background:#fff;box-shadow:0 24px 70px #15365e5c;overflow:hidden;border:1px solid #c9dce9;z-index:4}
 .chat.hidden{display:none}
-.chathead{background:linear-gradient(110deg,#214a73,#127e90);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:15px 17px;cursor:move;touch-action:none;user-select:none}
-.chattitle{font-size:20px;font-weight:800}.chatmeta{font-size:11px;color:#d8f4f3;margin-top:4px}
-.headbtn{background:#ffffff1e;color:#fff;border:1px solid #ffffff50;border-radius:8px;width:31px;height:31px;font-size:18px;line-height:1}
+.chathead{background:linear-gradient(110deg,#214a73,#127e90);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:15px 17px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none}
+.chattitle{font-size:20px;font-weight:800;margin:0}.chatmeta{font-size:11px;color:#d8f4f3;margin-top:4px}
+.headbtns{display:flex;gap:6px}
+.headbtn{background:#ffffff1e;color:#fff;border:1px solid #ffffff50;border-radius:8px;width:34px;height:34px;font-size:18px;line-height:1}
 .headbtn:hover{background:#ffffff38}
-.notice{background:#eaf8f7;border-bottom:1px solid #d5eceb;color:#236979;padding:9px 14px;font-size:11px}
-.msgs{flex:1;overflow-y:auto;background:#f7fafd;padding:18px 14px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
+.notice{background:#eaf8f7;border-bottom:1px solid #d5eceb;color:#1d5f6e;padding:9px 14px;font-size:11px}
+.msgs{flex:1;overflow-y:auto;overscroll-behavior:contain;background:#f7fafd;padding:18px 14px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
 .row{display:flex;flex-direction:column;max-width:92%;animation:in .25s ease-out}
 .row.bot{align-self:flex-start}.row.me{align-self:flex-end;align-items:flex-end}
-.bubble{padding:12px 14px;border-radius:15px;line-height:1.5;font-size:13px;white-space:pre-line}
+.bubble{padding:12px 14px;border-radius:15px;line-height:1.5;font-size:13px;white-space:pre-line;overflow-wrap:anywhere}
 .bot .bubble{background:#fff;border:1px solid #dfe9f2;border-top-left-radius:4px;box-shadow:0 2px 5px #15365d0c}
 .me .bubble{background:#d9f1ee;border-top-right-radius:4px}
-.time{font-size:10px;color:#93a4b5;margin:3px 6px 0}
-.bubble h4{margin:0 0 6px;font-size:13px}
-.bubble ul{margin:6px 0 0;padding-left:18px}.bubble li{margin:3px 0}
-.alertcard{border-left:4px solid #e0a43a;background:#fffaf0}
+.time{font-size:10px;color:#6f8296;margin:3px 6px 0}
+.alertcard{border-left:4px solid #e0a43a;background:#fffaf0!important}
+.bubble h4{margin:0 0 6px;font-size:13px}.bubble ul{margin:6px 0 0;padding-left:18px}.bubble li{margin:3px 0}.bubble .rec{margin-top:8px}
 .actions{display:flex;flex-direction:column;gap:8px;margin-top:12px}
-.actions button{border:1px solid #127e90;background:#fff;color:#127e90;border-radius:11px;padding:10px 12px;font-size:12px;font-weight:700;text-align:left;transition:background .15s}
+.actions button{border:1px solid #127e90;background:#fff;color:#0f6b7c;border-radius:11px;padding:10px 12px;font-size:12px;font-weight:700;text-align:left;transition:background .15s}
 .actions button.primary{background:#127e90;color:#fff}
 .actions button:hover:not(:disabled){background:#e3f5f6}
-.actions button.primary:hover:not(:disabled){background:#0c6677}
-.actions button:disabled{background:#e9f6ee;border-color:#a8e0c0;color:#1f874e}
+.actions button.primary:hover:not(:disabled){background:var(--teal-dark)}
+.actions button:disabled{background:#e9f6ee;border-color:var(--ok-bd);color:#1a7344}
 .typing{display:inline-flex;gap:4px;padding:14px}
 .typing i{width:7px;height:7px;background:#8fb2c4;border-radius:50%;animation:blink 1s infinite}
 .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
 @keyframes blink{0%,80%,100%{opacity:.3;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
 @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .quick{display:flex;flex-wrap:wrap;gap:7px;padding:10px 13px 0;background:#fff}
-.quick button{border:1px solid #b7dce0;border-radius:30px;background:#f1fbfa;color:#236779;font-size:11px;padding:8px 11px}
-.quick button:hover{background:#e0f5f3}
+.quick button{border:1px solid #9fd0d6;border-radius:30px;background:#f1fbfa;color:#1d5f72;font-size:11px;padding:8px 11px}
+.quick button:hover:not(:disabled){background:#e0f5f3}
+.quick button:disabled,.round:disabled{opacity:.5}
 .chatbottom{padding:12px;background:#fff;border-top:1px solid #e4ecf2}
 .entry{display:flex;align-items:center;gap:7px;background:#f1f6fa;border:1px solid #dde6ed;border-radius:14px;padding:7px}
-.entry input{width:100%;min-width:0;border:0;outline:0;background:transparent;font-size:13px;padding:8px}
-.round{border:0;border-radius:11px;background:#d6e7ee;color:#1e6680;min-width:36px;height:36px;font-weight:bold;font-size:17px}
+.entry input{width:100%;min-width:0;border:0;outline:0;background:transparent;font-size:16px;padding:8px}
+.entry:focus-within{border-color:#2c9aa6}
+.round{border:0;border-radius:11px;background:#d6e7ee;color:#1a5d75;min-width:38px;height:38px;font-weight:bold;font-size:17px}
 .round.send{background:#187f92;color:#fff}
-.round.active{background:#e45f67;color:#fff;animation:pulse 1.2s infinite}
+.round.active{background:#d4414a;color:#fff;animation:pulse 1.2s infinite}
 @keyframes pulse{50%{box-shadow:0 0 0 7px #e45f6728}}
-.status{min-height:17px;margin-top:6px;color:#6e8191;font-size:10px}
-.disclaimer{font-size:10px;color:#8697a9;text-align:center;padding:0 9px 8px;background:#fff}
+.status{min-height:17px;margin-top:6px;color:#586d80;font-size:11px}
+.disclaimer{font-size:10px;color:#667a8e;text-align:center;padding:0 9px 8px;background:#fff}
 .dot{height:9px;width:9px;background:#54d6b5;border-radius:50%;display:inline-block;margin-right:6px}
 
+[hidden]{display:none!important}
+.heading-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.present{border:0;border-radius:50px;padding:9px 16px;font-size:13px;font-weight:800;color:#fff;background:linear-gradient(110deg,#214a73,#127e90);box-shadow:0 6px 16px #127e9055;transition:filter .15s}
+.present:hover:not(:disabled){filter:brightness(1.12)}
+.present:disabled{opacity:.6}
+
+/* Monitor ECG simulado */
+.monitor{margin-top:14px;background:#06121c;border:1px solid #0e2a3b;border-radius:16px;padding:10px 12px 12px;color:#7dffb2;transition:border-color .3s}
+.mon-top{display:flex;justify-content:space-between;gap:8px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7f9fb3}
+.mon-alarm{color:#ff6b70}.monitor.warn .mon-alarm{color:#ffd166}
+.mon-body{display:grid;grid-template-columns:1fr 104px;gap:10px;margin-top:6px}
+.mon-ecg{width:100%;height:108px;display:block;border-radius:8px;background-color:#04101a;background-image:linear-gradient(#0f2b3b 1px,transparent 1px),linear-gradient(90deg,#0f2b3b 1px,transparent 1px);background-size:20px 20px}
+.mon-nums{display:flex;flex-direction:column;justify-content:space-between;gap:4px}
+.mon-n small{display:block;font-size:9px;letter-spacing:.5px;color:#7f9fb3}
+.mon-n b{display:block;font-size:26px;line-height:1.05;font-variant-numeric:tabular-nums}
+.mon-n.hr b{color:#7dffb2}.mon-n.sp b{color:#6fd8ff}.mon-n.bp b{color:#fff;font-size:17px}
+.monitor.warn{border-color:#c9951f}.monitor.warn .mon-n.hr b{color:#ffd166}
+.monitor.bad{border-color:#e5484d;animation:alarm 1s infinite}.monitor.bad .mon-n.hr b{color:#ff6b70}
+@keyframes alarm{50%{box-shadow:0 0 0 4px #e5484d55,0 0 22px #e5484d66}}
+
+.notecard{border-left:4px solid #127e90}
+.bubble h4{margin:0 0 6px;font-size:13px}.bubble ul{margin:6px 0 0;padding-left:18px}.bubble li{margin:3px 0}.bubble .rec{margin-top:8px}
+
+/* Demo guiada */
+.demo-caption{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:9;width:max-content;max-width:min(680px,calc(100vw - 24px));background:#0f2740f2;color:#fff;border-radius:16px;padding:10px 12px 10px 16px;display:flex;align-items:center;gap:12px;font-size:14px;line-height:1.4;box-shadow:0 12px 40px #0006}
+.demo-caption button{flex-shrink:0;border:1px solid #ffffff66;background:#ffffff1e;color:#fff;border-radius:10px;padding:6px 10px;font-weight:700;font-size:12px}
+.cursor{position:fixed;left:0;top:0;width:26px;height:26px;border-radius:50%;background:#4ec7c5b0;border:2px solid #fff;box-shadow:0 4px 14px #0006;z-index:10;pointer-events:none;opacity:0;transform:translate(-100px,-100px);transition:transform .85s cubic-bezier(.4,0,.2,1),opacity .2s}
+.cursor.on{opacity:1}
+.cursor.click{animation:tap .35s}
+@keyframes tap{50%{box-shadow:0 0 0 14px #4ec7c555}}
+body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
+.spot{box-shadow:0 0 0 3px #4ec7c5,0 0 0 10px #4ec7c540!important}
+#printnote{display:none}
+
 @media(max-width:920px){.columns{grid-template-columns:1fr}}
-@media(max-width:850px){.topbar{padding:0 16px}.topright{display:none}.shell{padding:0 14px}.patient{grid-template-columns:repeat(2,1fr)}.chat{right:14px;bottom:82px}.launcher{right:14px;bottom:14px}}
-@media(max-width:430px){.patient{grid-template-columns:1fr}.heading{align-items:flex-start;flex-direction:column}.panel{padding:17px}.brand small{display:none}}
+@media(max-width:850px){.topbar{padding:0 16px}.topright{display:none}.shell{padding:0 14px 90px}.patient{grid-template-columns:repeat(2,1fr)}.launcher{right:14px;bottom:14px}}
+@media(max-width:520px){
+  .chat{left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%;height:min(88vh,100dvh - 12px);height:min(88dvh,100dvh - 12px);border-radius:22px 22px 0 0}
+  .chathead{cursor:default}
+}
+@media(max-width:430px){.mon-body{grid-template-columns:1fr}.mon-nums{flex-direction:row}.patient{grid-template-columns:1fr}.heading{align-items:flex-start;flex-direction:column}.panel{padding:17px}.brand small{display:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media print{.launcher,.chat,.testpanel,.chips,.formbutton,.helper,.present,.demo-caption,.cursor{display:none!important}body{background:#fff}body.print-note>*:not(#printnote){display:none!important}body.print-note #printnote{display:block;white-space:pre-wrap;font:14px/1.6 Georgia,serif;color:#000;padding:8mm}}
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Saltar al contenido</a>
 <header class="topbar">
   <div class="brand">✚ TRIA<span>+</span> <small>Entorno hospitalario</small></div>
   <div class="topright">● Urgencias / Triaje &nbsp; | &nbsp; Usuario: Enfermería</div>
 </header>
 
-<main class="shell">
+<main class="shell" id="main">
   <div class="heading">
     <div><h1>Panel de valoración de Urgencias</h1><p>Paciente seleccionado · Entorno de presentación académica</p></div>
-    <div class="tag">● Caso simulado</div>
+    <div class="heading-actions"><button class="present" id="present" type="button">▶ Presentar</button><div class="tag">● Caso simulado</div></div>
   </div>
 
   <div class="columns">
-    <section class="panel">
-      <h2>Ficha del paciente <span class="pill-info">Llegada 19:12</span></h2>
+    <section class="panel" aria-labelledby="h-ficha">
+      <h2 id="h-ficha">Ficha del paciente <span class="pill-info">Llegada 19:12</span></h2>
       <div class="field"><span>Nombre</span><b>Ramón XXXX XXXX</b></div>
       <div class="field"><span>Identificador</span><b>DEMO-0082</b></div>
       <div class="field"><span>Edad / Sexo</span><b>74 años · Varón</b></div>
@@ -144,29 +200,42 @@ button:disabled{cursor:default}
       <div class="field"><span>Medicación habitual</span><b>Enalapril 10 mg, Furosemida 40 mg, AAS 100 mg</b></div>
       <div class="field"><span>N.º historia clínica (HC3)</span><b class="mono">HC3-0048-27X6</b></div>
 
-      <div class="patient" aria-live="polite">
-        <div class="metric" id="box-spo2"><small>SpO₂</small><strong id="m-spo2">97 %</strong><span class="state" id="s-spo2">En rango</span></div>
-        <div class="metric" id="box-fc"><small>FC</small><strong id="m-fc">124 lpm</strong><span class="state" id="s-fc">Fuera de rango</span></div>
-        <div class="metric" id="box-ta"><small>TA</small><strong id="m-ta">98/70 mmHg</strong><span class="state" id="s-ta">En el límite</span></div>
+      <div class="monitor" id="monitor" aria-hidden="true">
+        <div class="mon-top"><span>● Monitor · simulado</span><span class="mon-alarm" id="mon-alarm"></span></div>
+        <div class="mon-body">
+          <canvas class="mon-ecg" id="ecg"></canvas>
+          <div class="mon-nums">
+            <div class="mon-n hr"><small>FC lpm</small><b id="mon-hr">--</b></div>
+            <div class="mon-n sp"><small>SpO₂ %</small><b id="mon-sp">--</b></div>
+            <div class="mon-n bp"><small>TA mmHg</small><b id="mon-bp">--</b></div>
+          </div>
+        </div>
       </div>
 
-      <div class="patient sub" aria-label="Constantes complementarias">
+      <div class="patient" role="group" aria-label="Constantes principales" aria-live="polite">
+        <div class="metric" id="box-spo2"><small>SpO₂</small><strong id="m-spo2"></strong><span class="state" id="s-spo2"></span></div>
+        <div class="metric" id="box-fc"><small>FC</small><strong id="m-fc"></strong><span class="state" id="s-fc"></span></div>
+        <div class="metric" id="box-ta"><small>TA</small><strong id="m-ta"></strong><span class="state" id="s-ta"></span></div>
+      </div>
+
+      <div class="patient sub" role="group" aria-label="Constantes complementarias">
         <div class="metric warn"><small>Frec. Respiratoria</small><strong>24 rpm</strong><span class="state">Taquipnea leve</span></div>
         <div class="metric ok"><small>Temperatura</small><strong>36,8 °C</strong><span class="state">Afebril</span></div>
         <div class="metric ok"><small>Glucemia capilar</small><strong>118 mg/dL</strong><span class="state">En rango</span></div>
       </div>
 
-      <div class="warning">⚠ Los colores de las constantes son orientativos y no deben utilizarse para valorar pacientes ni asignar prioridades clínicas.</div>
+      <div class="warning" role="note">⚠ Los colores de las constantes son orientativos y no deben utilizarse para valorar pacientes ni asignar prioridades clínicas.</div>
       <div class="testpanel" role="group" aria-label="Pruebas de constantes">
         <span class="lbl">Probar constantes:</span>
-        <button class="t-ok" type="button" data-preset="green">Verde</button>
-        <button class="t-warn" type="button" data-preset="yellow">Amarillo</button>
-        <button class="t-bad" type="button" data-preset="red">Rojo</button>
+        <button class="t-ok" type="button" data-preset="green" aria-pressed="false">Verde</button>
+        <button class="t-warn" type="button" data-preset="yellow" aria-pressed="false">Amarillo</button>
+        <button class="t-bad" type="button" data-preset="red" aria-pressed="false">Rojo</button>
+        <button type="button" data-preset="initial" aria-pressed="true">Caso inicial</button>
       </div>
     </section>
 
-    <section class="panel">
-      <h2>Historia clínica abierta (HC3) <span class="pill-info">Episodio #URG-2026-884</span></h2>
+    <section class="panel" aria-labelledby="h-hc">
+      <h2 id="h-hc">Historia clínica abierta (HC3) <span class="pill-info">Episodio #URG-2026-884</span></h2>
       <div class="hc-doc">
         <div class="hc-top">
           <span><b>Paciente:</b> Ramón XXXX XXXX (74 años)</span>
@@ -200,292 +269,588 @@ button:disabled{cursor:default}
         <button type="button" data-preset-key="triaje" data-ask="Explícame el triaje">Explícame el triaje</button>
         <button type="button" data-preset-key="solicitudes" data-ask="¿Qué ocurre con las solicitudes?">Solicitudes</button>
         <button type="button" data-preset-key="funciones" data-ask="¿Qué puede hacer TRIA+?">¿Qué hace TRIA+?</button>
+        <button type="button" data-preset-key="nota" data-ask="Genera la nota de enfermería">Nota de enfermería</button>
       </div>
-      <button class="formbutton" id="openbtn" type="button">Abrir asistente TRIA+ ↗</button>
+      <button class="formbutton" id="openbtn" type="button" aria-controls="chat">Abrir asistente TRIA+ ↗</button>
     </section>
   </div>
   <p class="footer">TRIA+ · MVP educativo · No accede a HC3 · No emite diagnósticos ni prioridades clínicas reales</p>
 </main>
 
 <button class="launcher" id="launcher" type="button" aria-controls="chat" aria-expanded="false">
-  <span class="orb">✦</span> TRIA+ Assist <span class="badge" id="badge">1</span>
+  <span class="orb" aria-hidden="true">✦</span> TRIA+ Assist <span class="badge" id="badge" aria-hidden="true">1</span><span class="sr-only" id="badge-sr"></span>
 </button>
 
-<section class="chat hidden" id="chat" role="dialog" aria-label="Asistente flotante TRIA+" aria-hidden="true">
+<section class="chat hidden" id="chat" role="dialog" aria-modal="false" aria-labelledby="chat-title" aria-hidden="true" inert>
   <div class="chathead" id="draghead">
-    <div><div class="chattitle">✚ TRIA+ Assist</div><div class="chatmeta"><span class="dot"></span> Chat clínico · Texto y voz</div></div>
-    <div style="display:flex;gap:6px">
+    <div><h2 class="chattitle" id="chat-title">✚ TRIA+ Assist</h2><div class="chatmeta"><span class="dot" aria-hidden="true"></span> Chat clínico · Texto y voz</div></div>
+    <div class="headbtns">
       <button class="headbtn" title="Reiniciar conversación" aria-label="Reiniciar conversación" id="reset" type="button">↻</button>
-      <button class="headbtn" title="Minimizar" aria-label="Minimizar" id="minimize" type="button">−</button>
+      <button class="headbtn" title="Minimizar" aria-label="Minimizar asistente" id="minimize" type="button">−</button>
     </div>
   </div>
   <div class="notice">🔒 Prototipo con respuestas predefinidas · Sin conexión a datos reales</div>
-  <div class="msgs" id="msgs" aria-live="polite"></div>
+  <div class="msgs" id="msgs" role="log" aria-live="off" tabindex="0" aria-label="Conversación"></div>
   <div class="quick" id="quick">
-    <button type="button" data-preset-key="resumen" data-q="Resume el caso">📋 Resumir caso</button>
-    <button type="button" data-preset-key="solicitudes" data-q="¿Cómo gestionas las solicitudes?">📝 Solicitudes</button>
-    <button type="button" data-preset-key="triaje" data-q="Explícame el triaje">🩺 Valoración triaje</button>
+    <button type="button" data-preset-key="resumen" data-ask="Resume el caso">📋 Resumir caso</button>
+    <button type="button" data-preset-key="solicitudes" data-ask="¿Cómo gestionas las solicitudes?">📝 Solicitudes</button>
+    <button type="button" data-preset-key="triaje" data-ask="Explícame el triaje">🩺 Valoración triaje</button>
+    <button type="button" data-preset-key="nota" data-ask="Genera la nota de enfermería">📄 Nota de enfermería</button>
   </div>
-  <form class="chatbottom" id="form">
+  <form class="chatbottom" id="form" autocomplete="off">
     <div class="entry">
-      <input id="q" type="text" placeholder="Escribe una consulta clínica..." aria-label="Mensaje" autocomplete="off" maxlength="500">
-      <button type="button" class="round" id="mic" title="Dictar mensaje" aria-label="Dictar mensaje">🎤</button>
+      <input id="q" type="text" placeholder="Escribe una consulta clínica..." aria-label="Mensaje" autocomplete="off" maxlength="500" enterkeyhint="send">
+      <button type="button" class="round" id="mic" title="Dictar mensaje" aria-label="Dictar mensaje" aria-pressed="false">🎤</button>
       <button type="submit" class="round send" id="sendbtn" title="Enviar" aria-label="Enviar mensaje">➤</button>
     </div>
-    <div class="status" id="status">Puedes escribir o pulsar 🎤 para dictar una pregunta.</div>
+    <div class="status" id="status" role="status">Puedes escribir o pulsar 🎤 para dictar una pregunta.</div>
   </form>
   <div class="disclaimer">Solo demostración educativa. Un profesional valida toda actuación.</div>
 </section>
 
+<div class="demo-caption" id="caption" role="status" aria-live="polite" hidden><span id="cap-text"></span><button type="button" id="cap-stop">■ Detener</button></div>
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+<div class="sr-only" id="announce" aria-live="polite"></div>
+<div id="printnote" aria-hidden="true"></div>
+
 <script>
 'use strict';
-const $ = id => document.getElementById(id);
-const chat = $('chat'), msgs = $('msgs'), q = $('q');
-let unread = 0, busy = false;
+(() => {
+  const $ = id => document.getElementById(id);
+  const chat = $('chat'), msgs = $('msgs'), q = $('q'), launcher = $('launcher');
+  const statusEl = $('status'), sendBtn = $('sendbtn'), mic = $('mic');
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobileSheet = () => matchMedia('(max-width:520px)').matches;
+  let unread = 0, busy = false, replyTimer = 0;
+  const streams = new Set();
+  let current = { spo2: 97, fc: 124, sis: 98, dia: 70 };
 
-/* ---------- Abrir / minimizar (arranca minimizado) ---------- */
-function openChat(){
-  chat.classList.remove('hidden');
-  chat.style.display='flex';
-  chat.setAttribute('aria-hidden','false');
-  $('launcher').style.display='none';
-  $('launcher').setAttribute('aria-expanded','true');
-  unread=0; $('badge').classList.remove('on');
-  q.focus({preventScroll:true});
-  msgs.scrollTop=msgs.scrollHeight;
-}
-function minimizeChat(restoreFocus = true){
-  chat.classList.add('hidden');
-  chat.style.display='none';
-  chat.setAttribute('aria-hidden','true');
-  $('launcher').style.display='flex';
-  $('launcher').setAttribute('aria-expanded','false');
-  if(restoreFocus) $('launcher').focus({preventScroll:true});
-}
-$('launcher').addEventListener('click',openChat);
-$('openbtn').addEventListener('click',openChat);
-$('minimize').addEventListener('click',() => minimizeChat(true));
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape' && !chat.classList.contains('hidden')) minimizeChat(true);
-});
-
-/* ---------- Mensajes ---------- */
-const hora = () => new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
-function scrollDown(){ msgs.scrollTop=msgs.scrollHeight; }
-
-function addBubble(text,who,opts={}){
-  const row=document.createElement('div');
-  row.className='row '+who;
-  const b=document.createElement('div');
-  b.className='bubble'+(opts.cls?' '+opts.cls:'');
-  b.textContent=text;
-  row.appendChild(b);
-  const t=document.createElement('div');
-  t.className='time'; t.textContent=hora();
-  row.appendChild(t);
-  msgs.appendChild(row);
-  scrollDown();
-  if(who==='bot' && chat.classList.contains('hidden')){
-    unread++; $('badge').textContent=unread; $('badge').classList.add('on');
+  /* ================= Semáforo orientativo de constantes ================= */
+  const LEVEL_TEXT = { ok: 'En rango', warn: 'En el límite', bad: 'Fuera de rango' };
+  const inRange = (v, [a, b]) => v >= a && v <= b;
+  const classify = (v, l) => inRange(v, l.green) ? 'ok' : inRange(v, l.yellow) ? 'warn' : 'bad';
+  const LIMITS = { spo2: { green: [95, 100], yellow: [90, 94] }, fc: { green: [50, 100], yellow: [101, 120] } };
+  function taLevel(sis, dia) {
+    if (sis < 90 || sis >= 160 || dia < 60 || dia >= 100) return 'bad';
+    if (sis < 100 || sis >= 140 || dia < 65 || dia >= 90) return 'warn';
+    return 'ok';
   }
-  return row;
-}
-function typingRow(){
-  const row=document.createElement('div');
-  row.className='row bot';
-  row.innerHTML='<div class="bubble typing" aria-label="TRIA+ está escribiendo"><i></i><i></i><i></i></div>';
-  msgs.appendChild(row); scrollDown();
-  return row;
-}
-function welcome(){
-  addBubble('¡Hola! Soy TRIA+ Assist.\nPuedo mostrarte cómo apoyaríamos a enfermería en el triaje y la gestión de registros.\n\n¿Qué te gustaría consultar?','bot');
-}
-$('reset').addEventListener('click',()=>{
-  msgs.replaceChildren(); busy=false; welcome();
-  $('status').textContent='Conversación reiniciada.';
-});
+  const PRESETS = { initial: [97, 124, 98, 70], green: [98, 78, 120, 80], yellow: [93, 110, 95, 65], red: [88, 130, 85, 55] };
+  function paint(key, text, state) {
+    $('box-' + key).className = 'metric ' + state;
+    $('m-' + key).textContent = text;
+    $('s-' + key).textContent = LEVEL_TEXT[state];
+  }
+  const RANK = { ok: 0, warn: 1, bad: 2 };
+  function actualizarConstantes(spo2, fc, sis, dia) {
+    const lv = [classify(spo2, LIMITS.spo2), classify(fc, LIMITS.fc), taLevel(sis, dia)];
+    paint('spo2', spo2 + ' %', lv[0]);
+    paint('fc', fc + ' lpm', lv[1]);
+    paint('ta', sis + '/' + dia + ' mmHg', lv[2]);
+    current = { spo2, fc, sis, dia };
+    monitorUpdate(lv.reduce((a, b) => RANK[b] > RANK[a] ? b : a, 'ok'));
+  }
+  function setPreset(name) {
+    if (!PRESETS[name]) return;
+    actualizarConstantes(...PRESETS[name]);
+    document.querySelectorAll('[data-preset]').forEach(b =>
+      b.setAttribute('aria-pressed', String(b.dataset.preset === name)));
+  }
+  document.querySelectorAll('[data-preset]').forEach(b =>
+    b.addEventListener('click', () => setPreset(b.dataset.preset)));
 
-/* ---------- Respuestas predefinidas para cada botón ---------- */
-const presetReplies = {
-  resumen:
-'📋 RESUMEN DEL CASO\nPaciente: Ramón XXXX XXXX (DEMO-0082), varón de 74 años. Motivo de consulta: disnea progresiva de 48 h y malestar general.\n\nAntecedentes y tratamiento: HTA, cardiopatía isquémica e insuficiencia cardiaca; en tratamiento con Enalapril 10 mg, Furosemida 40 mg y AAS 100 mg.\n\nConstantes actuales: SpO₂ 97 %, FC 124 lpm (elevada), TA 98/70 mmHg (en el límite) y FR 24 rpm.\n\nTRIA+ recopila los datos clínicos relevantes y muestra alertas para revisión profesional.',
-  triaje:
-'🩺 APOYO A LA VALORACIÓN DE TRIAJE\nEn este paciente con antecedente de insuficiencia cardiaca, taquicardia (124 lpm), taquipnea leve (24 rpm) y TA en el límite (98/70 mmHg), el sistema destacaría signos de alarma cardiorrespiratoria y sugeriría monitorización estrecha y prioridad preferente.\n\nTRIA+ no emite diagnósticos ni sustituye la escala oficial de triaje: la asignación final corresponde siempre al personal sanitario.',
-  solicitudes:
-'📝 GESTIÓN DE SOLICITUDES Y REGISTROS\nSegún el protocolo para disnea y antecedentes cardiacos, TRIA+ prepara borradores de pruebas complementarias (ECG de 12 derivaciones, analítica con iones, función renal y BNP, y radiografía de tórax) además del registro de acceso venoso.\n\nNinguna solicitud se cursa automáticamente sin la revisión y firma del profesional autorizado.',
-  funciones:
-'✨ ¿QUÉ PUEDE HACER TRIA+?\n• Asistente flotante integrado en la estación clínica (HC3).\n• Consulta rápida mediante texto o dictado por voz.\n• Síntesis estructurada de antecedentes, alergias y constantes.\n• Alertas de seguridad farmacológica e interacciones.\n• Borradores de registros de enfermería y peticiones.'
-};
+  /* ================= Monitor ECG (simulado) ================= */
+  const cv = $('ecg'), cx = cv.getContext('2d'), monEl = $('monitor');
+  const ECG_COLOR = { ok: '#7dffb2', warn: '#ffd166', bad: '#ff6b70' };
+  const ECG_SPEED = 160;                       // px por segundo
+  let ecgW = 0, ecgH = 0, ecgHead = 0, ecgPhase = 0, ecgLastY = null, ecgLast = 0, ecgAcc = 0, ecgRaf = 0, monLevel = 'ok';
 
-/* ---------- Respuesta especial: medicación (para cualquier texto escrito) ---------- */
-function medicationReply(){
-  const row=document.createElement('div');
-  row.className='row bot';
-  const b=document.createElement('div');
-  b.className='bubble alertcard';
-  b.innerHTML=
-    '<h4>💊 Ibuprofeno: no indicado con los datos actuales</h4>'+
-    'Con la información que tenemos ahora, <b>no está indicado administrar ibuprofeno</b> a este paciente.'+
-    '<ul>'+
-    '<li>Tiene 74 años, disnea y FC elevada con TA en el límite: aún no se ha descartado una causa cardiaca o respiratoria, y los AINE pueden empeorar la insuficiencia cardiaca, la función renal y la tensión.</li>'+
-    '<li>Faltan datos clave: alergias, medicación habitual (anticoagulantes, antihipertensivos, diuréticos), función renal y riesgo digestivo.</li>'+
-    '<li>Un analgésico puede enmascarar síntomas antes de la valoración.</li>'+
-    '</ul>'+
-    '<div style="margin-top:8px"><b>Recomendación:</b> no administrar hasta que el médico valore y valide la pauta.</div>';
-  const actions=document.createElement('div');
-  actions.className='actions';
-  const mk=(label,cls,done,msg)=>{
-    const btn=document.createElement('button');
-    btn.type='button'; btn.textContent=label; btn.className=cls;
-    btn.addEventListener('click',()=>{
-      btn.disabled=true; btn.textContent=done;
-      addBubble(msg,'bot');
-    });
-    return btn;
-  };
-  actions.append(
-    mk('👨‍⚕️ Enviar consulta al médico','primary','✓ Consulta preparada para el médico','Consulta preparada para el médico. Pendiente de validación en el sistema hospitalario.'),
-    mk('💊 Solicitar valoración de medicación','','✓ Valoración solicitada','Solicitud de valoración de medicación registrada. Pendiente de revisión médica.')
-  );
-  b.appendChild(actions);
-  row.appendChild(b);
-  const t=document.createElement('div'); t.className='time'; t.textContent=hora();
-  row.appendChild(t);
-  return row;
-}
+  function ecgWave(p) {                        // complejo PQRST aproximado con gaussianas
+    const g = (c, w, a) => a * Math.exp(-((p - c) * (p - c)) / (2 * w * w));
+    return g(.16, .03, .13) + g(.35, .009, -.14) + g(.372, .013, 1) + g(.395, .011, -.28) + g(.6, .055, .24);
+  }
+  const ecgY = p => ecgH * 0.74 - ecgWave(p) * ecgH * 0.58;
 
-/* ---------- Envío de mensajes ---------- */
-function send(message, presetKey = null){
-  const value=String(message||'').trim();
-  if(!value || busy) return;
-  busy=true;
-  addBubble(value,'me');
-  if(!presetKey) q.value='';
-  const dots=typingRow();
-  setTimeout(()=>{
-    dots.remove();
-    if(presetKey && presetReplies[presetKey]){
-      addBubble(presetReplies[presetKey],'bot');
-    } else {
-      msgs.appendChild(medicationReply());
-      scrollDown();
-      if(chat.classList.contains('hidden')){
-        unread++; $('badge').textContent=unread; $('badge').classList.add('on');
+  function ecgResize() {
+    const r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+    ecgW = Math.max(60, Math.floor(r.width)); ecgH = Math.max(40, Math.floor(r.height));
+    cv.width = ecgW * d; cv.height = ecgH * d;
+    cx.setTransform(d, 0, 0, d, 0, 0);
+    cx.lineWidth = 2; cx.lineJoin = 'round'; cx.lineCap = 'round';
+    ecgHead = 0; ecgLastY = null;
+    if (reduceMotion) ecgStatic();
+  }
+  function ecgStatic() {                       // traza fija si hay "reducir movimiento"
+    cx.clearRect(0, 0, ecgW, ecgH);
+    cx.strokeStyle = ECG_COLOR[monLevel]; cx.beginPath();
+    const perBeat = ECG_SPEED * 60 / current.fc;
+    for (let x = 0; x < ecgW; x++) { const y = ecgY((x / perBeat) % 1); x ? cx.lineTo(x, y) : cx.moveTo(x, y); }
+    cx.stroke();
+  }
+  function ecgFrame(t) {
+    ecgRaf = requestAnimationFrame(ecgFrame);
+    ecgAcc += Math.min(0.08, (t - ecgLast) / 1000 || 0) * ECG_SPEED; ecgLast = t;
+    const cols = Math.floor(ecgAcc); ecgAcc -= cols;
+    cx.strokeStyle = ECG_COLOR[monLevel];
+    for (let i = 0; i < cols; i++) {
+      ecgHead++; if (ecgHead >= ecgW) { ecgHead = 0; ecgLastY = null; }
+      ecgPhase += current.fc / (60 * ECG_SPEED);
+      const y = ecgY(ecgPhase % 1);
+      cx.clearRect(ecgHead, 0, 14, ecgH);      // hueco delante del "cursor" de barrido
+      if (ecgLastY !== null) { cx.beginPath(); cx.moveTo(ecgHead - 1, ecgLastY); cx.lineTo(ecgHead, y); cx.stroke(); }
+      ecgLastY = y;
+    }
+  }
+  function ecgStart() { if (reduceMotion || ecgRaf) return; ecgLast = performance.now(); ecgRaf = requestAnimationFrame(ecgFrame); }
+  function ecgStop() { cancelAnimationFrame(ecgRaf); ecgRaf = 0; }
+  document.addEventListener('visibilitychange', () => document.hidden ? ecgStop() : ecgStart());
+  addEventListener('resize', ecgResize);
+
+  function monNumbers() {                      // cifras con ligera oscilación realista
+    const j = reduceMotion ? 0 : 1;
+    $('mon-hr').textContent = current.fc + Math.round((Math.random() * 2 - 1) * 2 * j);
+    $('mon-sp').textContent = Math.min(100, current.spo2 + Math.round((Math.random() * 2 - 1) * j));
+    $('mon-bp').textContent = current.sis + '/' + current.dia;
+  }
+  function monitorUpdate(level) {
+    monLevel = level;
+    monEl.className = 'monitor' + (level === 'ok' ? '' : ' ' + level);
+    $('mon-alarm').textContent = level === 'bad' ? '⚠ ALARMA (simulada)' : level === 'warn' ? 'Vigilar' : '';
+    monNumbers();
+    if (reduceMotion) ecgStatic();
+  }
+  setInterval(() => { if (!document.hidden) monNumbers(); }, 1000);
+
+  /* ================= Abrir / minimizar ================= */
+  function openChat() {
+    chat.classList.remove('hidden');
+    chat.inert = false;
+    chat.setAttribute('aria-hidden', 'false');
+    launcher.classList.add('hidden');
+    launcher.setAttribute('aria-expanded', 'false');
+    unread = 0; $('badge').classList.remove('on'); $('badge-sr').textContent = '';
+    clampChat();
+    if (!isMobileSheet()) q.focus({ preventScroll: true });
+    scrollDown(true);
+  }
+  function minimizeChat(restoreFocus = true) {
+    stopListening();
+    chat.classList.add('hidden');
+    chat.inert = true;
+    chat.setAttribute('aria-hidden', 'true');
+    launcher.classList.remove('hidden');
+    if (restoreFocus) launcher.focus({ preventScroll: true });
+  }
+  launcher.addEventListener('click', openChat);
+  $('openbtn').addEventListener('click', openChat);
+  $('minimize').addEventListener('click', () => minimizeChat(true));
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (demo.on) { stopDemo(); return; }
+    if (!chat.classList.contains('hidden')) minimizeChat(true);
+  });
+
+  /* ================= Mensajes ================= */
+  const hora = () => new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  function scrollDown(instant) {
+    msgs.scrollTo({ top: msgs.scrollHeight, behavior: instant || reduceMotion ? 'auto' : 'smooth' });
+  }
+  function setBusy(v) {
+    busy = v;
+    sendBtn.disabled = v;
+    document.querySelectorAll('[data-preset-key]').forEach(b => { if (chat.contains(b)) b.disabled = v; });
+  }
+
+  function announce(t) {                       // texto completo para lectores de pantalla (el streaming visual no se lee bien)
+    const el = $('announce');
+    el.textContent = '';
+    setTimeout(() => { el.textContent = t; }, 60);
+  }
+  async function copyText(t) {
+    try { await navigator.clipboard.writeText(t); return true; } catch (_) { /* fallback */ }
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = t; ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:0;opacity:0';
+      document.body.appendChild(ta); ta.select();
+      const ok = document.execCommand('copy'); ta.remove(); return ok;
+    } catch (_) { return false; }
+  }
+  function printNote(text) {
+    $('printnote').textContent = 'TRIA+ · Borrador de nota de enfermería\nDEMOSTRACIÓN EDUCATIVA · Datos simulados\n\n' + text;
+    document.body.classList.add('print-note');
+    const clean = () => document.body.classList.remove('print-note');
+    addEventListener('afterprint', clean, { once: true });
+    setTimeout(() => { try { window.print(); } catch (_) { clean(); } }, 50);
+    return true;
+  }
+
+  /* Efecto de escritura progresiva: revela el contenido ya construido, palabra a palabra */
+  function streamBubble(b, onDone) {
+    const nodes = [], w = document.createTreeWalker(b, NodeFilter.SHOW_TEXT);
+    for (let n; (n = w.nextNode());) if (!n.parentElement.closest('.actions')) nodes.push(n);
+    const tokens = nodes.map(n => n.nodeValue.split(/(\s+)/));
+    const blockOf = n => n.parentElement.closest('li,.rec');
+    nodes.forEach(n => { n.nodeValue = ''; const blk = blockOf(n); if (blk) blk.hidden = true; });
+    const actions = b.querySelector('.actions'); if (actions) actions.hidden = true;
+    let i = 0, k = 0;
+    const timer = setInterval(() => {
+      for (let budget = 3; budget > 0 && i < nodes.length;) {
+        if (k === 0) { const blk = blockOf(nodes[i]); if (blk) blk.hidden = false; }
+        if (k >= tokens[i].length) { i++; k = 0; continue; }
+        nodes[i].nodeValue += tokens[i][k++]; budget--;
+      }
+      scrollDown(true);
+      if (i >= nodes.length) {
+        clearInterval(timer); streams.delete(timer);
+        if (actions) actions.hidden = false;
+        scrollDown(true);
+        if (onDone) onDone();
+      }
+    }, 28);
+    streams.add(timer);
+  }
+
+  function addBubble(text, who, opts = {}) {
+    const row = document.createElement('div');
+    row.className = 'row ' + who;
+    const b = document.createElement('div');
+    b.className = 'bubble' + (opts.cls ? ' ' + opts.cls : '');
+    if (opts.title) { const h = document.createElement('h4'); h.textContent = opts.title; b.appendChild(h); }
+    b.appendChild(document.createTextNode(text));   // nodos de texto: nunca se interpreta HTML
+    if (opts.list) {
+      const ul = document.createElement('ul');
+      opts.list.forEach(t => { const li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+      b.appendChild(ul);
+    }
+    if (opts.footer) {
+      const f = document.createElement('div'); f.className = 'rec';
+      const strong = document.createElement('b'); strong.textContent = opts.footer[0];
+      f.append(strong, ' ' + opts.footer[1]); b.appendChild(f);
+    }
+    if (opts.actions && opts.actions.length) {
+      const box = document.createElement('div');
+      box.className = 'actions';
+      opts.actions.forEach(a => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = a.label;
+        if (a.primary) btn.className = 'primary';
+        btn.addEventListener('click', async () => {
+          let ok = true;
+          if (a.run) { try { ok = (await a.run()) !== false; } catch (_) { ok = false; } }
+          if (!ok) { btn.textContent = a.fail || 'No se pudo completar'; return; }
+          btn.disabled = true;
+          btn.textContent = a.done;
+          if (a.msg) addBubble(a.msg, 'bot', { stream: true });
+        });
+        box.appendChild(btn);
+      });
+      b.appendChild(box);
+    }
+    row.appendChild(b);
+    const t = document.createElement('div');
+    t.className = 'time'; t.textContent = hora();
+    row.appendChild(t);
+    msgs.appendChild(row);
+    scrollDown();
+    if (who === 'bot') {
+      announce([opts.title, text, ...(opts.list || []), opts.footer && opts.footer.join(' ')].filter(Boolean).join('. '));
+      if (chat.classList.contains('hidden')) {
+        unread++;
+        $('badge').textContent = unread; $('badge').classList.add('on');
+        $('badge-sr').textContent = ` (${unread} mensaje${unread > 1 ? 's' : ''} sin leer)`;
       }
     }
-    busy=false;
-  },1300);
-}
-
-/* ---------- Eventos de envío (Enter y botón enviar) ---------- */
-$('form').addEventListener('submit', e => {
-  e.preventDefault();
-  send(q.value);
-});
-$('sendbtn').addEventListener('click', e => {
-  e.preventDefault();
-  send(q.value);
-});
-q.addEventListener('keydown', e => {
-  if(e.key === 'Enter'){
-    e.preventDefault();
-    send(q.value);
+    if (opts.stream && !reduceMotion) streamBubble(b, opts.onDone);
+    else if (opts.onDone) opts.onDone();
+    return row;
   }
-});
+  function typingRow() {
+    const row = document.createElement('div');
+    row.className = 'row bot';
+    const b = document.createElement('div');
+    b.className = 'bubble typing';
+    b.setAttribute('role', 'status');
+    b.setAttribute('aria-label', 'TRIA+ está escribiendo');
+    b.innerHTML = '<i></i><i></i><i></i>';
+    row.appendChild(b);
+    msgs.appendChild(row); scrollDown();
+    return row;
+  }
+  function welcome() {
+    addBubble('¡Hola! Soy TRIA+ Assist.\nPuedo mostrarte cómo apoyaríamos a enfermería en el triaje y la gestión de registros.\n\n¿Qué te gustaría consultar?', 'bot');
+  }
+  function resetChat() {
+    clearTimeout(replyTimer);
+    streams.forEach(clearInterval); streams.clear();
+    stopListening();
+    msgs.replaceChildren();
+    q.value = '';
+    setBusy(false);
+    welcome();
+    statusEl.textContent = 'Conversación reiniciada.';
+  }
+  $('reset').addEventListener('click', resetChat);
 
-/* Botones rápidos dentro del chat */
-document.querySelectorAll('[data-q]').forEach(el=>el.addEventListener('click',()=>{
-  send(el.dataset.q, el.dataset.presetKey);
-}));
-
-/* Botones rápidos en la pantalla principal */
-document.querySelectorAll('[data-ask]').forEach(el=>el.addEventListener('click',()=>{
-  openChat();
-  send(el.dataset.ask, el.dataset.presetKey);
-}));
-
-/* ---------- Voz (solo botón micrófono) ---------- */
-let recognition=null, recording=false;
-const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-if(SR){
-  recognition=new SR();
-  recognition.lang='es-ES';
-  recognition.interimResults=false;
-  recognition.maxAlternatives=1;
-  recognition.onresult=e=>{
-    q.value=e.results[0][0].transcript;
-    $('status').textContent='Texto dictado. Comprueba el contenido y pulsa enviar.';
-    q.focus();
+  /* ================= Respuestas predefinidas para cada botón ================= */
+  const presetReplies = {
+    resumen:
+'📋 RESUMEN DEL CASO\nPaciente: Ramón XXXX XXXX (DEMO-0082), varón de 74 años. Motivo de consulta: disnea progresiva de 48 h y malestar general.\n\nAntecedentes y tratamiento: HTA, cardiopatía isquémica e insuficiencia cardiaca; en tratamiento con Enalapril 10 mg, Furosemida 40 mg y AAS 100 mg.\n\nConstantes actuales: SpO₂ 97 %, FC 124 lpm (elevada), TA 98/70 mmHg (en el límite) y FR 24 rpm.\n\nTRIA+ recopila los datos clínicos relevantes y muestra alertas para revisión profesional.',
+    triaje:
+'🩺 APOYO A LA VALORACIÓN DE TRIAJE\nEn este paciente con antecedente de insuficiencia cardiaca, taquicardia (124 lpm), taquipnea leve (24 rpm) y TA en el límite (98/70 mmHg), el sistema destacaría signos de alarma cardiorrespiratoria y sugeriría monitorización estrecha y prioridad preferente.\n\nTRIA+ no emite diagnósticos ni sustituye la escala oficial de triaje: la asignación final corresponde siempre al personal sanitario.',
+    solicitudes:
+'📝 GESTIÓN DE SOLICITUDES Y REGISTROS\nSegún el protocolo para disnea y antecedentes cardiacos, TRIA+ prepara borradores de pruebas complementarias (ECG de 12 derivaciones, analítica con iones, función renal y BNP, y radiografía de tórax) además del registro de acceso venoso.\n\nNinguna solicitud se cursa automáticamente sin la revisión y firma del profesional autorizado.',
+    funciones:
+'✨ ¿QUÉ PUEDE HACER TRIA+?\n• Asistente flotante integrado en la estación clínica (HC3).\n• Consulta rápida mediante texto o dictado por voz.\n• Síntesis estructurada de antecedentes, alergias y constantes.\n• Alertas de seguridad farmacológica e interacciones.\n• Borradores de registros de enfermería y peticiones.'
   };
-  recognition.onerror=e=>{ $('status').textContent='El micrófono no está disponible ('+e.error+'). Puedes escribir.'; };
-  recognition.onend=()=>{ recording=false; $('mic').classList.remove('active'); $('mic').textContent='🎤'; };
-}
-$('mic').addEventListener('click',()=>{
-  if(!recognition){ $('status').textContent='Este navegador no admite dictado. Prueba Chrome/Edge o escribe tu consulta.'; return; }
-  if(recording){ recognition.stop(); return; }
-  try{
-    recognition.start(); recording=true;
-    $('mic').classList.add('active'); $('mic').textContent='■';
-    $('status').textContent='Escuchando… habla ahora.';
-  }catch(err){ $('status').textContent='No se pudo activar el micrófono. Comprueba los permisos o escribe tu consulta.'; }
-});
 
-/* ---------- Arrastrar ventana (escritorio) ---------- */
-let dragging=false,dx=0,dy=0;
-const head=$('draghead');
-head.addEventListener('pointerdown',e=>{
-  if(e.target.closest('button')||window.innerWidth<650) return;
-  dragging=true;
-  const r=chat.getBoundingClientRect();
-  dx=e.clientX-r.left; dy=e.clientY-r.top;
-  head.setPointerCapture(e.pointerId);
-});
-head.addEventListener('pointermove',e=>{
-  if(!dragging) return;
-  const maxX=Math.max(5,window.innerWidth-chat.offsetWidth-5);
-  const maxY=Math.max(5,window.innerHeight-chat.offsetHeight-5);
-  chat.style.left=Math.min(Math.max(5,e.clientX-dx),maxX)+'px';
-  chat.style.top=Math.min(Math.max(5,e.clientY-dy),maxY)+'px';
-  chat.style.right='auto'; chat.style.bottom='auto';
-});
-['pointerup','pointercancel'].forEach(ev=>head.addEventListener(ev,()=>dragging=false));
+  /* Respuesta especial: medicación (para cualquier texto escrito) */
+  function medicationReply(done) {
+    addBubble('Con la información que tenemos ahora, no está indicado administrar ibuprofeno a este paciente.', 'bot', {
+      cls: 'alertcard', stream: true, onDone: done,
+      title: '💊 Ibuprofeno: no indicado con los datos actuales',
+      list: [
+        'Tiene 74 años, disnea y FC elevada con TA en el límite: aún no se ha descartado una causa cardiaca o respiratoria, y los AINE pueden empeorar la insuficiencia cardiaca, la función renal y la tensión.',
+        'Faltan datos clave: alergias, medicación habitual (anticoagulantes, antihipertensivos, diuréticos), función renal y riesgo digestivo.',
+        'Un analgésico puede enmascarar síntomas antes de la valoración.'
+      ],
+      footer: ['Recomendación:', 'no administrar hasta que el médico valore y valide la pauta.'],
+      actions: [
+        { label: '👨‍⚕️ Enviar consulta al médico', primary: true, done: '✓ Consulta preparada para el médico', msg: 'Consulta preparada para el médico. Pendiente de validación en el sistema hospitalario.' },
+        { label: '💊 Solicitar valoración de medicación', done: '✓ Valoración solicitada', msg: 'Solicitud de valoración de medicación registrada. Pendiente de revisión médica.' }
+      ]
+    });
+  }
 
-/* ---------- Semáforo orientativo de constantes ---------- */
-function classify(v,l){
-  if(v>=l.green[0]&&v<=l.green[1]) return 'ok';
-  if(v>=l.yellow[0]&&v<=l.yellow[1]) return 'warn';
-  return 'bad';
-}
-function paint(key,text,state){
-  const box=$('box-'+key);
-  box.classList.remove('ok','warn','bad'); box.classList.add(state);
-  $('m-'+key).textContent=text;
-  $('s-'+key).textContent=state==='ok'?'En rango':state==='warn'?'En el límite':'Fuera de rango';
-}
-function actualizarConstantes(spo2,fc,sis,dia){
-  const sState=classify(spo2,{green:[95,100],yellow:[90,94]});
-  const fState=classify(fc,{green:[50,100],yellow:[101,120]});
-  let tState='ok';
-  if(sis<90||sis>=160||dia<60||dia>=100) tState='bad';
-  else if(sis<100||sis>=140||dia<65||dia>=90) tState='warn';
-  paint('spo2',spo2+' %',sState);
-  paint('fc',fc+' lpm',fState);
-  paint('ta',sis+'/'+dia+' mmHg',tState);
-}
-actualizarConstantes(97,124,98,70);
-const presets={green:[98,78,120,80],yellow:[93,110,95,65],red:[88,130,85,55]};
-document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>actualizarConstantes(...presets[b.dataset.preset])));
+  /* Borrador de nota de enfermería: se rellena con las constantes actuales */
+  function noteData() {
+    const c = current;
+    const fecha = new Date().toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return [
+      ['Fecha y hora', fecha],
+      ['Paciente', 'Ramón XXXX XXXX · DEMO-0082 · 74 años · Varón'],
+      ['Episodio', '#URG-2026-884 · Triaje / Box 04'],
+      ['Motivo de consulta', 'disnea progresiva de 48 h y malestar general'],
+      ['Antecedentes', 'HTA, cardiopatía isquémica crónica estable, insuficiencia cardiaca con FEVI ligeramente reducida, dislipemia; exfumador'],
+      ['Alergias', 'sin alergias medicamentosas conocidas'],
+      ['Medicación habitual', 'Enalapril 10 mg, Furosemida 40 mg, AAS 100 mg'],
+      ['Constantes', `SpO₂ ${c.spo2} %, FC ${c.fc} lpm, TA ${c.sis}/${c.dia} mmHg, FR 24 rpm, Tª 36,8 °C, glucemia capilar 118 mg/dL`],
+      ['Observaciones', 'ortopnea con dos almohadas, edema maleolar vespertino y molestias torácicas inespecíficas leves'],
+      ['Pendiente', 'ECG de 12 derivaciones, analítica (función renal, iones, BNP), radiografía de tórax portátil; acceso venoso pendiente de validación médica']
+    ];
+  }
+  function notaReply(done) {
+    const data = noteData();
+    const text = 'BORRADOR DE NOTA DE ENFERMERÍA (SIMULADO)\n' + data.map(([a, v]) => `${a}: ${v}`).join('\n') +
+      '\n\nBorrador generado por TRIA+: requiere revisión y firma del profesional.';
+    addBubble('Borrador generado a partir de los datos mostrados. Revísalo y fírmalo antes de registrarlo.', 'bot', {
+      cls: 'notecard', stream: true, onDone: done,
+      title: '📄 Borrador de nota de enfermería (simulado)',
+      list: data.map(([a, v]) => `${a}: ${v}`),
+      footer: ['Importante:', 'la nota no se guarda ni se envía a HC3 sin la firma del profesional.'],
+      actions: [
+        { label: '📋 Copiar nota', primary: true, done: '✓ Nota copiada', fail: 'No se pudo copiar; selecciona el texto', run: () => copyText(text), msg: 'Nota copiada al portapapeles.' },
+        { label: '🖨 Imprimir / guardar PDF', done: '✓ Enviada a impresión', run: () => printNote(text) }
+      ]
+    });
+  }
 
-/* ---------- Inicio ---------- */
-minimizeChat(false);
-welcome();
-const params=new URLSearchParams(location.search);
-if(params.get('kiosk')==='1'){ document.querySelector('.topbar').style.display='none'; minimizeChat(false); }
-if(params.get('auto')==='resumen'){ setTimeout(()=>{openChat();send('Resume el caso','resumen');},700); }
-if(params.get('readonly')==='1'){
-  q.disabled=true; $('mic').style.display='none'; $('sendbtn').style.display='none';
-  $('status').textContent='Modo demostración: solo lectura.';
-}
+  /* ================= Envío de mensajes ================= */
+  function send(message, presetKey = null) {
+    const value = String(message || '').trim();
+    if (!value || busy) return;
+    if (chat.classList.contains('hidden')) openChat();
+    setBusy(true);
+    addBubble(value, 'me');
+    if (!presetKey) q.value = '';
+    const dots = typingRow();
+    replyTimer = setTimeout(() => {
+      dots.remove();
+      const done = () => setBusy(false);
+      if (presetKey === 'nota') notaReply(done);
+      else if (presetKey && presetReplies[presetKey]) addBubble(presetReplies[presetKey], 'bot', { stream: true, onDone: done });
+      else medicationReply(done);
+    }, reduceMotion ? 0 : 1000);
+  }
+
+  $('form').addEventListener('submit', e => {   // cubre Enter y botón enviar
+    e.preventDefault();
+    stopListening();
+    send(q.value);
+  });
+  document.addEventListener('click', e => {      // botones rápidos (chat y pantalla principal)
+    const b = e.target.closest('[data-preset-key]');
+    if (b) send(b.dataset.ask, b.dataset.presetKey);
+  });
+
+  /* ================= Dictado por voz ================= */
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let rec = null, listening = false;
+
+  function setMic(on) {
+    listening = on;
+    mic.classList.toggle('active', on);
+    mic.setAttribute('aria-pressed', String(on));
+    mic.title = on ? 'Detener dictado' : 'Dictar mensaje';
+    mic.setAttribute('aria-label', on ? 'Detener dictado' : 'Dictar mensaje');
+  }
+  function stopListening() {
+    if (rec && listening) { try { rec.stop(); } catch (_) {} }
+    setMic(false);
+  }
+  const SR_ERRORS = {
+    'not-allowed': 'Permiso de micrófono denegado. Actívalo en el navegador para dictar.',
+    'service-not-allowed': 'El dictado no está permitido en este navegador.',
+    'no-speech': 'No se detectó voz. Inténtalo de nuevo.',
+    'audio-capture': 'No se encontró ningún micrófono.',
+    'network': 'Error de red en el servicio de dictado.'
+  };
+
+  if (!SR) {
+    mic.disabled = true;
+    mic.title = 'Dictado no disponible en este navegador';
+    statusEl.textContent = 'Dictado por voz no disponible en este navegador; usa el teclado.';
+  } else {
+    mic.addEventListener('click', () => {
+      if (listening) { stopListening(); statusEl.textContent = 'Dictado detenido.'; return; }
+      rec = new SR();
+      rec.lang = 'es-ES';
+      rec.interimResults = true;
+      rec.continuous = false;
+      rec.onstart = () => { setMic(true); statusEl.textContent = '🎙 Escuchando… habla ahora.'; };
+      rec.onresult = ev => {
+        q.value = ev.results[0][0].transcript.slice(0, 500);
+        statusEl.textContent = 'Texto dictado. Comprueba el contenido y pulsa enviar.';
+        q.focus();
+      };
+      rec.onerror = ev => { statusEl.textContent = SR_ERRORS[ev.error] || 'No se pudo completar el dictado.'; };
+      rec.onend = () => setMic(false);
+      try { rec.start(); } catch (_) { setMic(false); }
+    });
+  }
+
+  /* ================= Ventana arrastrable (pointer events, con límites) ================= */
+  const head = $('draghead');
+  let drag = null;
+  function clampChat() {
+    if (isMobileSheet()) { chat.style.left = chat.style.top = chat.style.right = chat.style.bottom = ''; return; }
+    if (!chat.style.left) return;
+    const r = chat.getBoundingClientRect();
+    const x = Math.min(Math.max(0, r.left), innerWidth - r.width);
+    const y = Math.min(Math.max(0, r.top), innerHeight - r.height);
+    chat.style.left = x + 'px'; chat.style.top = y + 'px';
+  }
+  head.addEventListener('pointerdown', e => {
+    if (e.button !== 0 || e.target.closest('button') || isMobileSheet()) return;
+    const r = chat.getBoundingClientRect();
+    drag = { dx: e.clientX - r.left, dy: e.clientY - r.top };
+    chat.style.left = r.left + 'px'; chat.style.top = r.top + 'px';
+    chat.style.right = 'auto'; chat.style.bottom = 'auto';
+    head.setPointerCapture(e.pointerId);
+  });
+  head.addEventListener('pointermove', e => {
+    if (!drag) return;
+    const r = chat.getBoundingClientRect();
+    const x = Math.min(Math.max(0, e.clientX - drag.dx), innerWidth - r.width);
+    const y = Math.min(Math.max(0, e.clientY - drag.dy), innerHeight - r.height);
+    chat.style.left = x + 'px'; chat.style.top = y + 'px';
+  });
+  const endDrag = () => { drag = null; };
+  head.addEventListener('pointerup', endDrag);
+  head.addEventListener('pointercancel', endDrag);
+  head.addEventListener('dblclick', e => {            // doble clic en la cabecera: vuelve a la posición original
+    if (e.target.closest('button')) return;
+    chat.style.left = chat.style.top = chat.style.right = chat.style.bottom = '';
+  });
+  addEventListener('resize', clampChat);
+
+  /* ================= Demo guiada ("Presentar") ================= */
+  const demo = { on: false, running: false };
+  const STOP = 'demo-stop';
+  const capEl = $('caption'), cursor = $('cursor'), presentBtn = $('present');
+  let cancelWait = null;
+  const wait = ms => new Promise((res, rej) => {
+    const t = setTimeout(() => { cancelWait = null; demo.on ? res() : rej(STOP); }, ms);
+    cancelWait = () => { clearTimeout(t); cancelWait = null; rej(STOP); };
+  });
+  const stopDemo = () => { demo.on = false; if (cancelWait) cancelWait(); };
+  const caption = t => { $('cap-text').textContent = t; capEl.hidden = false; };
+  const spot = el => { document.querySelectorAll('.spot').forEach(x => x.classList.remove('spot')); if (el) el.classList.add('spot'); };
+  async function idle() { while (busy) await wait(150); await wait(700); }
+  async function pointAndClick(el, after = 300) {
+    if (!chat.contains(el) && el !== launcher) el.scrollIntoView({ block: 'center' });
+    await wait(60);
+    const r = el.getBoundingClientRect();
+    cursor.classList.add('on');
+    cursor.style.transform = `translate(${r.left + r.width / 2 - 13}px,${r.top + r.height / 2 - 13}px)`;
+    await wait(reduceMotion ? 60 : 950);
+    cursor.classList.remove('click'); void cursor.offsetWidth; cursor.classList.add('click');
+    await wait(260);
+    el.click();
+    await wait(after);
+  }
+  async function typeText(text) {
+    if (!isMobileSheet()) q.focus({ preventScroll: true });
+    for (const ch of text) { q.value += ch; await wait(reduceMotion ? 0 : 45); }
+  }
+  function endDemo() {
+    demo.on = false; demo.running = false;
+    document.body.classList.remove('demo');
+    capEl.hidden = true; cursor.classList.remove('on'); spot(null);
+    presentBtn.disabled = false;
+  }
+  async function runDemo() {
+    if (demo.running) return;
+    demo.on = demo.running = true;
+    presentBtn.disabled = true;
+    document.body.classList.add('demo');
+    try {
+      resetChat(); minimizeChat(false); setPreset('initial');
+      scrollTo({ top: 0 });
+      caption('Caso simulado: varón de 74 años con disnea y antecedentes cardiacos.');
+      spot($('h-ficha').closest('.panel')); await wait(3300);
+      caption('Monitor y semáforo muestran las constantes. Son orientativos: nunca asignan prioridad.');
+      spot($('monitor')); await wait(3800);
+      caption('Si el paciente empeora, el monitor entra en alarma (simulada).');
+      spot(null); await pointAndClick(document.querySelector('[data-preset="red"]'), 3200);
+      caption('Volvemos al caso inicial.');
+      await pointAndClick(document.querySelector('[data-preset="initial"]'), 1200);
+      caption('Abrimos el asistente TRIA+, integrado en la estación clínica.');
+      await pointAndClick(launcher, 1200);
+      caption('Resumen del caso en un clic.');
+      await pointAndClick(chat.querySelector('[data-preset-key="resumen"]')); await idle();
+      caption('Apoyo a la valoración de triaje: destaca los datos, no decide.');
+      await pointAndClick(chat.querySelector('[data-preset-key="triaje"]')); await idle();
+      caption('También acepta preguntas en texto libre (o por voz).');
+      await typeText('¿Le puedo dar ibuprofeno para el malestar?'); await wait(600);
+      await pointAndClick(sendBtn, 200); await idle();
+      caption('Alerta de seguridad: no administrar antes de la valoración médica.'); await wait(1800);
+      const act = [...chat.querySelectorAll('.actions button.primary')].filter(x => !x.disabled).pop();
+      if (act) { await pointAndClick(act); await idle(); }
+      caption('Y redacta un borrador de nota de enfermería, listo para revisar y firmar.');
+      await pointAndClick(chat.querySelector('[data-preset-key="nota"]')); await idle(); await wait(2500);
+      caption('TRIA+ apoya a enfermería. La decisión es siempre del profesional sanitario.');
+      await wait(4200);
+    } catch (e) { if (e !== STOP) console.error(e); }
+    finally { endDemo(); }
+  }
+  presentBtn.addEventListener('click', runDemo);
+  $('cap-stop').addEventListener('click', stopDemo);
+
+  /* ================= Inicio ================= */
+  setPreset('initial');
+  ecgResize(); ecgStart();
+  welcome();   // la ventana arranca minimizada; el globo del lanzador avisa de 1 mensaje
+  const params = new URLSearchParams(location.search);
+  if (params.get('kiosk') === '1') document.querySelector('.topbar').style.display = 'none';
+  if (params.get('auto') === 'resumen') setTimeout(() => { openChat(); send('Resume el caso', 'resumen'); }, 700);
+  if (params.get('auto') === 'demo') setTimeout(runDemo, 700);
+  if (params.get('readonly') === '1') {
+    q.disabled = true; mic.style.display = 'none'; sendBtn.style.display = 'none'; presentBtn.hidden = true;
+    statusEl.textContent = 'Modo demostración: solo lectura.';
+  }
+})();
 </script>
 </body>
 </html>
