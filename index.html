@@ -154,6 +154,28 @@ button:disabled{cursor:default}
 .notecard{border-left:4px solid #127e90}
 .bubble h4{margin:0 0 6px;font-size:13px}.bubble ul{margin:6px 0 0;padding-left:18px}.bubble li{margin:3px 0}.bubble .rec{margin-top:8px}
 
+/* Campana: avisar al médico */
+.bell-btn{position:relative;display:inline-flex;align-items:center;gap:10px;border:0;border-radius:50px;padding:6px 20px 6px 6px;font-weight:800;font-size:14px;color:#fff;background:linear-gradient(110deg,#c62f38,#d4452f);box-shadow:0 8px 22px #c62f3860;transition:transform .15s,filter .15s}
+.bell-btn::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;animation:halo 2.4s infinite}
+.bell-btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.bell-ic{width:40px;height:40px;border-radius:50%;background:#ffffff2e;display:grid;place-items:center;flex-shrink:0}
+.bell-ic svg{width:23px;height:23px;transform-origin:50% 10%;animation:ring 3.2s infinite}
+.bell-btn.sent{background:linear-gradient(110deg,#127a4d,#1a9565);box-shadow:0 8px 22px #127a4d55}
+.bell-btn.sent::after,.bell-btn.sent .bell-ic svg{animation:none}
+@keyframes ring{0%,58%,100%{transform:rotate(0)}62%{transform:rotate(16deg)}66%{transform:rotate(-14deg)}70%{transform:rotate(11deg)}74%{transform:rotate(-8deg)}78%{transform:rotate(4deg)}82%{transform:rotate(0)}}
+@keyframes halo{0%{box-shadow:0 0 0 0 #c62f3880}70%,100%{box-shadow:0 0 0 16px #c62f3800}}
+.modal-ov{position:fixed;inset:0;z-index:8;background:#0f274099;display:grid;place-items:center;padding:16px}
+.modal{background:#fff;border-radius:20px;width:min(460px,100%);padding:22px;box-shadow:0 30px 80px #0f274080;animation:in .2s ease-out}
+.modal h2{margin:0 0 4px;font-size:19px;display:flex;align-items:center;gap:8px}
+.modal p{margin:0 0 12px;font-size:13px;color:#47617d;line-height:1.5}
+.modal .field{margin:6px 0}
+.modal-actions{display:flex;gap:10px;margin-top:16px;justify-content:flex-end;flex-wrap:wrap}
+.modal-actions button{border-radius:11px;padding:11px 16px;font-weight:800;font-size:13px;border:1px solid #127e90;background:#fff;color:#0f6b7c}
+.modal-actions .go{background:#c62f38;border-color:#c62f38;color:#fff}
+.modal-actions .go:hover{background:#a82530}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:9;max-width:calc(100vw - 24px);background:#0f2740;color:#fff;padding:12px 18px;border-radius:14px;font-size:14px;line-height:1.4;box-shadow:0 12px 40px #0006;animation:in .25s ease-out}
+.hc-list li.dyn{color:#0f6b4a;font-weight:600}
+
 /* Demo guiada */
 .demo-caption{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:9;width:max-content;max-width:min(680px,calc(100vw - 24px));background:#0f2740f2;color:#fff;border-radius:16px;padding:10px 12px 10px 16px;display:flex;align-items:center;gap:12px;font-size:14px;line-height:1.4;box-shadow:0 12px 40px #0006}
 .demo-caption button{flex-shrink:0;border:1px solid #ffffff66;background:#ffffff1e;color:#fff;border-radius:10px;padding:6px 10px;font-weight:700;font-size:12px}
@@ -173,7 +195,7 @@ body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
 }
 @media(max-width:430px){.mon-body{grid-template-columns:1fr}.mon-nums{flex-direction:row}.patient{grid-template-columns:1fr}.heading{align-items:flex-start;flex-direction:column}.panel{padding:17px}.brand small{display:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
-@media print{.launcher,.chat,.testpanel,.chips,.formbutton,.helper,.present,.demo-caption,.cursor{display:none!important}body{background:#fff}body.print-note>*:not(#printnote){display:none!important}body.print-note #printnote{display:block;white-space:pre-wrap;font:14px/1.6 Georgia,serif;color:#000;padding:8mm}}
+@media print{.bell-btn,.toast,.modal-ov,.launcher,.chat,.testpanel,.chips,.formbutton,.helper,.present,.demo-caption,.cursor{display:none!important}body{background:#fff}body.print-note>*:not(#printnote){display:none!important}body.print-note #printnote{display:block;white-space:pre-wrap;font:14px/1.6 Georgia,serif;color:#000;padding:8mm}}
 </style>
 </head>
 <body>
@@ -186,7 +208,12 @@ body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
 <main class="shell" id="main">
   <div class="heading">
     <div><h1>Panel de valoración de Urgencias</h1><p>Paciente seleccionado · Entorno de presentación académica</p></div>
-    <div class="heading-actions"><button class="present" id="present" type="button">▶ Presentar</button><div class="tag">● Caso simulado</div></div>
+    <div class="heading-actions">
+      <button class="bell-btn" id="bell" type="button" aria-haspopup="dialog" aria-controls="bell-ov">
+        <span class="bell-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
+        <span id="bell-txt">Avisar al médico</span>
+      </button>
+      <button class="present" id="present" type="button">▶ Presentar</button><div class="tag">● Caso simulado</div></div>
   </div>
 
   <div class="columns">
@@ -255,7 +282,7 @@ body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
 
         <div class="hc-block">
           <h3>Registro de enfermería y pruebas solicitadas</h3>
-          <ul class="hc-list">
+          <ul class="hc-list" id="hclog">
             <li><b>19:14:</b> Recepción en triaje, toma de constantes iniciales y monitorización continua.</li>
             <li><b>19:16:</b> Canalización de acceso venoso periférico pendiente de validación médica.</li>
             <li><b>Solicitudes en curso:</b> ECG de 12 derivaciones, analítica con función renal/iones/BNP y radiografía de tórax portátil.</li>
@@ -308,6 +335,18 @@ body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
   <div class="disclaimer">Solo demostración educativa. Un profesional valida toda actuación.</div>
 </section>
 
+<div class="modal-ov" id="bell-ov" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="bell-title" aria-describedby="bell-desc">
+    <h2 id="bell-title">🔔 Avisar al médico</h2>
+    <p id="bell-desc">Se enviará un aviso al médico responsable con este resumen. Es una simulación: no hay conexión real.</p>
+    <div id="bell-sum"></div>
+    <div class="modal-actions">
+      <button type="button" id="bell-cancel">Cancelar</button>
+      <button type="button" class="go" id="bell-go">Enviar aviso</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <div class="demo-caption" id="caption" role="status" aria-live="polite" hidden><span id="cap-text"></span><button type="button" id="cap-stop">■ Detener</button></div>
 <div class="cursor" id="cursor" aria-hidden="true"></div>
 <div class="sr-only" id="announce" aria-live="polite"></div>
@@ -447,6 +486,7 @@ body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
     if (demo.on) { stopDemo(); return; }
+    if (!bellOv.hidden) { closeBell(); return; }
     if (!chat.classList.contains('hidden')) minimizeChat(true);
   });
 
@@ -765,6 +805,96 @@ body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
   });
   addEventListener('resize', clampChat);
 
+  /* ================= Campana: avisar al médico (simulado) ================= */
+  const bell = $('bell'), bellTxt = $('bell-txt'), bellOv = $('bell-ov');
+  let bellState = 'idle', bellTimers = [], bellOpener = null, toastTimer = 0;
+  const LV_WORD = { ok: 'en rango', warn: 'en el límite', bad: 'fuera de rango' };
+
+  function toast(t) {
+    const el = $('toast'); el.textContent = t; el.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, 4500);
+  }
+  function bellSummary() {
+    const c = current;
+    return [
+      ['Paciente', 'Ramón XXXX XXXX · DEMO-0082'],
+      ['Ubicación', 'Triaje / Box 04'],
+      ['Motivo', 'Disnea y malestar general'],
+      ['Constantes', `SpO₂ ${c.spo2} % · FC ${c.fc} lpm · TA ${c.sis}/${c.dia} mmHg`],
+      ['Estado', `SpO₂ ${LV_WORD[classify(c.spo2, LIMITS.spo2)]}, FC ${LV_WORD[classify(c.fc, LIMITS.fc)]}, TA ${LV_WORD[taLevel(c.sis, c.dia)]}`]
+    ];
+  }
+  function openBell() {
+    bellOpener = document.activeElement;
+    const sent = bellState !== 'idle';
+    $('bell-title').textContent = sent ? '🔔 Aviso ya enviado' : '🔔 Avisar al médico';
+    $('bell-desc').textContent = sent
+      ? 'El médico ya tiene un aviso de este episodio. Puedes enviar otro con las constantes actuales.'
+      : 'Se enviará un aviso al médico responsable con este resumen. Es una simulación: no hay conexión real.';
+    $('bell-go').textContent = sent ? 'Reenviar aviso' : 'Enviar aviso';
+    const box = $('bell-sum'); box.replaceChildren();
+    bellSummary().forEach(([k, v]) => {
+      const f = document.createElement('div'); f.className = 'field';
+      const a = document.createElement('span'); a.textContent = k;
+      const b = document.createElement('b'); b.textContent = v;
+      f.append(a, b); box.appendChild(f);
+    });
+    bellOv.hidden = false;
+    $('bell-go').focus();
+  }
+  function closeBell(restore = true) {
+    bellOv.hidden = true;
+    if (restore && bellOpener && document.contains(bellOpener)) bellOpener.focus({ preventScroll: true });
+  }
+  function logLine(text) {
+    const li = document.createElement('li'); li.className = 'dyn'; li.textContent = text;
+    $('hclog').appendChild(li);
+  }
+  function sendAlert() {
+    closeBell();
+    bellTimers.forEach(clearTimeout); bellTimers = [];
+    const t = hora(), c = current;
+    bellState = 'sent';
+    bell.classList.add('sent');
+    bellTxt.textContent = 'Médico avisado · ' + t;
+    bell.setAttribute('aria-label', 'Médico avisado a las ' + t + '. Pulsa para reenviar el aviso');
+    toast('🔔 Aviso enviado al médico (simulado) · ' + t);
+    logLine(`${t}: Aviso al médico enviado (simulado). SpO₂ ${c.spo2} %, FC ${c.fc} lpm, TA ${c.sis}/${c.dia}.`);
+    addBubble('Pendiente de confirmación de recepción.', 'bot', {
+      cls: 'alertcard', title: '🔔 Aviso enviado al médico (simulado)',
+      list: ['Hora: ' + t, 'Paciente: DEMO-0082 · Triaje / Box 04', `Constantes: SpO₂ ${c.spo2} %, FC ${c.fc} lpm, TA ${c.sis}/${c.dia} mmHg`]
+    });
+    bellTimers.push(setTimeout(() => {              // confirmación simulada de recepción
+      const t2 = hora();
+      bellState = 'ack';
+      bellTxt.textContent = 'Médico en camino · ' + t2;
+      toast('✓ El médico de guardia ha recibido el aviso (simulado)');
+      logLine(`${t2}: Aviso recibido por el médico de guardia (simulado).`);
+      addBubble('El médico de guardia ha confirmado la recepción del aviso y acudirá al box.', 'bot', { title: '✓ Aviso recibido (simulado)' });
+    }, 6000));
+  }
+  function resetBell() {
+    bellTimers.forEach(clearTimeout); bellTimers = [];
+    bellState = 'idle';
+    bell.classList.remove('sent');
+    bellTxt.textContent = 'Avisar al médico';
+    bell.removeAttribute('aria-label');
+    document.querySelectorAll('#hclog li.dyn').forEach(li => li.remove());
+    $('toast').hidden = true;
+    closeBell(false);
+  }
+  bell.addEventListener('click', openBell);
+  $('bell-go').addEventListener('click', sendAlert);
+  $('bell-cancel').addEventListener('click', () => closeBell());
+  bellOv.addEventListener('click', e => { if (e.target === bellOv) closeBell(); });
+  bellOv.addEventListener('keydown', e => {          // el foco no escapa del diálogo
+    if (e.key !== 'Tab') return;
+    const f = [...bellOv.querySelectorAll('button')];
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
   /* ================= Demo guiada ("Presentar") ================= */
   const demo = { on: false, running: false };
   const STOP = 'demo-stop';
@@ -806,7 +936,7 @@ body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
     presentBtn.disabled = true;
     document.body.classList.add('demo');
     try {
-      resetChat(); minimizeChat(false); setPreset('initial');
+      resetChat(); resetBell(); minimizeChat(false); setPreset('initial');
       scrollTo({ top: 0 });
       caption('Caso simulado: varón de 74 años con disnea y antecedentes cardiacos.');
       spot($('h-ficha').closest('.panel')); await wait(3300);
@@ -830,6 +960,12 @@ body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
       if (act) { await pointAndClick(act); await idle(); }
       caption('Y redacta un borrador de nota de enfermería, listo para revisar y firmar.');
       await pointAndClick(chat.querySelector('[data-preset-key="nota"]')); await idle(); await wait(2500);
+      caption('Y con un gesto, avisa al médico de guardia.');
+      await pointAndClick(bell, 900);
+      await pointAndClick($('bell-go'), 1800);
+      caption('El aviso queda en la historia y en el chat, con las constantes del momento.');
+      spot($('hclog').closest('.hc-block')); await wait(3800);
+      spot(null);
       caption('TRIA+ apoya a enfermería. La decisión es siempre del profesional sanitario.');
       await wait(4200);
     } catch (e) { if (e !== STOP) console.error(e); }
@@ -847,7 +983,7 @@ body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
   if (params.get('auto') === 'resumen') setTimeout(() => { openChat(); send('Resume el caso', 'resumen'); }, 700);
   if (params.get('auto') === 'demo') setTimeout(runDemo, 700);
   if (params.get('readonly') === '1') {
-    q.disabled = true; mic.style.display = 'none'; sendBtn.style.display = 'none'; presentBtn.hidden = true;
+    q.disabled = true; mic.style.display = 'none'; sendBtn.style.display = 'none'; presentBtn.hidden = true; bell.hidden = true;
     statusEl.textContent = 'Modo demostración: solo lectura.';
   }
 })();
