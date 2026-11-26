@@ -87,7 +87,7 @@ button:disabled{cursor:default}
 .badge{background:#d4414a;color:#fff;border-radius:50%;width:19px;height:19px;font-size:11px;display:none;place-items:center}
 .badge.on{display:grid}
 
-.chat{position:fixed;right:24px;bottom:90px;width:min(420px,calc(100vw - 28px));height:min(660px,calc(100vh - 115px));height:min(660px,calc(100dvh - 115px));display:flex;flex-direction:column;border-radius:22px;background:#fff;box-shadow:0 24px 70px #15365e5c;overflow:hidden;border:1px solid #c9dce9;z-index:4}
+.chat{position:fixed;right:24px;bottom:90px;width:min(420px,calc(100vw - 28px));height:min(660px,calc(100vh - 115px));height:min(660px,calc(100dvh - 115px));display:flex;flex-direction:column;border-radius:22px;background:#fff;box-shadow:0 24px 70px #15365e5c;overflow:hidden;border:1px solid #c9dce9;z-index:7}
 .chat.hidden{display:none}
 .chathead{background:linear-gradient(110deg,#214a73,#127e90);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:15px 17px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none}
 .chattitle{font-size:20px;font-weight:800;margin:0}.chatmeta{font-size:11px;color:#d8f4f3;margin-top:4px}
@@ -160,6 +160,11 @@ button:disabled{cursor:default}
 .bell-btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
 .bell-ic{width:40px;height:40px;border-radius:50%;background:#ffffff2e;display:grid;place-items:center;flex-shrink:0}
 .bell-ic svg{width:23px;height:23px;transform-origin:50% 10%;animation:ring 3.2s infinite}
+.bell-slot{display:inline-block}
+.bell-btn.float{position:fixed;top:14px;right:calc(16px + env(safe-area-inset-right));z-index:6;box-shadow:0 12px 32px #c62f3899,0 0 0 3px #ffffffd9;animation:in .25s ease-out}
+.bell-btn.float.sent{box-shadow:0 12px 32px #127a4d88,0 0 0 3px #ffffffd9}
+body.chat-open .bell-btn.float{right:calc(min(420px,100vw - 28px) + 36px);padding:6px}
+body.chat-open .bell-btn.float #bell-txt{display:none}
 .bell-btn.sent{background:linear-gradient(110deg,#127a4d,#1a9565);box-shadow:0 8px 22px #127a4d55}
 .bell-btn.sent::after,.bell-btn.sent .bell-ic svg{animation:none}
 @keyframes ring{0%,58%,100%{transform:rotate(0)}62%{transform:rotate(16deg)}66%{transform:rotate(-14deg)}70%{transform:rotate(11deg)}74%{transform:rotate(-8deg)}78%{transform:rotate(4deg)}82%{transform:rotate(0)}}
@@ -193,6 +198,7 @@ body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
   .chat{left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%;height:min(88vh,100dvh - 12px);height:min(88dvh,100dvh - 12px);border-radius:22px 22px 0 0}
   .chathead{cursor:default}
 }
+@media(max-width:520px){body.chat-open .bell-btn.float{right:calc(16px + env(safe-area-inset-right))}.bell-btn.float{padding:6px}.bell-btn.float #bell-txt{display:none}}
 @media(max-width:430px){.mon-body{grid-template-columns:1fr}.mon-nums{flex-direction:row}.patient{grid-template-columns:1fr}.heading{align-items:flex-start;flex-direction:column}.panel{padding:17px}.brand small{display:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 @media print{.bell-btn,.toast,.modal-ov,.launcher,.chat,.testpanel,.chips,.formbutton,.helper,.present,.demo-caption,.cursor{display:none!important}body{background:#fff}body.print-note>*:not(#printnote){display:none!important}body.print-note #printnote{display:block;white-space:pre-wrap;font:14px/1.6 Georgia,serif;color:#000;padding:8mm}}
@@ -209,10 +215,10 @@ body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
   <div class="heading">
     <div><h1>Panel de valoración de Urgencias</h1><p>Paciente seleccionado · Entorno de presentación académica</p></div>
     <div class="heading-actions">
-      <button class="bell-btn" id="bell" type="button" aria-haspopup="dialog" aria-controls="bell-ov">
+      <span class="bell-slot" id="bell-slot"><button class="bell-btn" id="bell" type="button" aria-label="Avisar al médico" aria-haspopup="dialog" aria-controls="bell-ov">
         <span class="bell-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
         <span id="bell-txt">Avisar al médico</span>
-      </button>
+      </button></span>
       <button class="present" id="present" type="button">▶ Presentar</button><div class="tag">● Caso simulado</div></div>
   </div>
 
@@ -463,6 +469,7 @@ body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
   /* ================= Abrir / minimizar ================= */
   function openChat() {
     chat.classList.remove('hidden');
+    document.body.classList.add('chat-open');
     chat.inert = false;
     chat.setAttribute('aria-hidden', 'false');
     launcher.classList.add('hidden');
@@ -475,11 +482,24 @@ body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
   function minimizeChat(restoreFocus = true) {
     stopListening();
     chat.classList.add('hidden');
+    document.body.classList.remove('chat-open');
     chat.inert = true;
     chat.setAttribute('aria-hidden', 'true');
     launcher.classList.remove('hidden');
     if (restoreFocus) launcher.focus({ preventScroll: true });
   }
+  /* Clic fuera del chat = minimizar (sin tocar lo que sí debe seguir funcionando) */
+  const KEEP_OPEN = '#launcher,#openbtn,[data-preset-key],#bell-slot,#bell-ov,#toast,#caption';
+  let downInChat = false;
+  document.addEventListener('pointerdown', e => { downInChat = e.composedPath().includes(chat); }, true);
+  document.addEventListener('click', e => {
+    if (chat.classList.contains('hidden') || document.body.classList.contains('demo')) return;
+    const path = e.composedPath();               // se evalúa antes de que otros manejadores cambien el DOM
+    if (downInChat || path.includes(chat)) return;   // gesto iniciado dentro (arrastre, selección de texto…)
+    if (path.some(n => n instanceof Element && n.matches(KEEP_OPEN))) return;
+    if (!bellOv.hidden) return;
+    minimizeChat(false);
+  }, true);
   launcher.addEventListener('click', openChat);
   $('openbtn').addEventListener('click', openChat);
   $('minimize').addEventListener('click', () => minimizeChat(true));
@@ -652,7 +672,6 @@ body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
       title: '💊 Ibuprofeno: no indicado con los datos actuales',
       list: [
         'Tiene 74 años, disnea y FC elevada con TA en el límite: aún no se ha descartado una causa cardiaca o respiratoria, y los AINE pueden empeorar la insuficiencia cardiaca, la función renal y la tensión.',
-        'Faltan datos clave: alergias, medicación habitual (anticoagulantes, antihipertensivos, diuréticos), función renal y riesgo digestivo.',
         'Un analgésico puede enmascarar síntomas antes de la valoración.'
       ],
       footer: ['Recomendación:', 'no administrar hasta que el médico valore y valide la pauta.'],
@@ -868,6 +887,7 @@ body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
       const t2 = hora();
       bellState = 'ack';
       bellTxt.textContent = 'Médico en camino · ' + t2;
+      bell.setAttribute('aria-label', 'Médico en camino, aviso recibido a las ' + t2 + '. Pulsa para reenviar el aviso');
       toast('✓ El médico de guardia ha recibido el aviso (simulado)');
       logLine(`${t2}: Aviso recibido por el médico de guardia (simulado).`);
       addBubble('El médico de guardia ha confirmado la recepción del aviso y acudirá al box.', 'bot', { title: '✓ Aviso recibido (simulado)' });
@@ -878,10 +898,23 @@ body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
     bellState = 'idle';
     bell.classList.remove('sent');
     bellTxt.textContent = 'Avisar al médico';
-    bell.removeAttribute('aria-label');
+    bell.setAttribute('aria-label', 'Avisar al médico');
     document.querySelectorAll('#hclog li.dyn').forEach(li => li.remove());
     $('toast').hidden = true;
     closeBell(false);
+  }
+  /* La campana se queda fija en pantalla al hacer scroll (sin mover el resto del diseño) */
+  const bellSlot = $('bell-slot');
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([en]) => {
+      const out = !en.isIntersecting;
+      if (out === bell.classList.contains('float')) return;
+      if (out) {                                   // el hueco conserva el tamaño para evitar saltos de maquetación
+        const r = bell.getBoundingClientRect();
+        bellSlot.style.width = r.width + 'px'; bellSlot.style.height = r.height + 'px';
+      } else { bellSlot.style.width = bellSlot.style.height = ''; }
+      bell.classList.toggle('float', out);
+    }).observe(bellSlot);
   }
   bell.addEventListener('click', openBell);
   $('bell-go').addEventListener('click', sendAlert);
@@ -983,7 +1016,7 @@ body.demo .shell,body.demo .launcher,body.demo .chat{pointer-events:none}
   if (params.get('auto') === 'resumen') setTimeout(() => { openChat(); send('Resume el caso', 'resumen'); }, 700);
   if (params.get('auto') === 'demo') setTimeout(runDemo, 700);
   if (params.get('readonly') === '1') {
-    q.disabled = true; mic.style.display = 'none'; sendBtn.style.display = 'none'; presentBtn.hidden = true; bell.hidden = true;
+    q.disabled = true; mic.style.display = 'none'; sendBtn.style.display = 'none'; presentBtn.hidden = true; bell.hidden = true; bellSlot.hidden = true;
     statusEl.textContent = 'Modo demostración: solo lectura.';
   }
 })();
